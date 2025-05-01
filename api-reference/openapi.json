@@ -10,7 +10,7 @@
   },
   "servers": [
     {
-      "url": "http://sandbox.mintlify.com"
+      "url": "https://api.olyptik.io"
     }
   ],
   "security": [
@@ -19,7 +19,7 @@
     }
   ],
   "paths": {
-    "/plants": {
+    "/crawls": {
       "get": {
         "description": "Returns all plants from the system that the user has access to",
         "parameters": [
@@ -35,13 +35,13 @@
         ],
         "responses": {
           "200": {
-            "description": "Plant response",
+            "description": "Crawl response",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Plant"
+                    "$ref": "#/components/schemas/Crawl"
                   }
                 }
               }
@@ -60,13 +60,13 @@
         }
       },
       "post": {
-        "description": "Creates a new plant in the store",
+        "description": "Initiates a new crawl",
         "requestBody": {
-          "description": "Plant to add to the store",
+          "description": "Crawl to initiate",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewPlant"
+                "$ref": "#/components/schemas/CreateCrawlDto"
               }
             }
           },
@@ -74,11 +74,11 @@
         },
         "responses": {
           "200": {
-            "description": "plant response",
+            "description": "Crawl object",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Plant"
+                  "$ref": "#/components/schemas/Crawl"
                 }
               }
             }
@@ -96,7 +96,7 @@
         }
       }
     },
-    "/plants/{id}": {
+    "/crawls/{id}": {
       "delete": {
         "description": "Deletes a single plant based on the ID supplied",
         "parameters": [
@@ -122,6 +122,32 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "description": "Returns a single crawl based on the ID supplied",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of crawl to return",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Crawl object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Crawl"
                 }
               }
             }
@@ -154,37 +180,157 @@
   },
   "components": {
     "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
-          },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
-          }
-        }
-      },
-      "NewPlant": {
+      "Crawl": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/Plant"
+            "$ref": "#/components/schemas/CreateCrawl"
           },
           {
-            "required": [
-              "id"
-            ],
             "type": "object",
             "properties": {
               "id": {
-                "description": "Identification number of the plant",
+                "description": "Identification number of the crawl",
                 "type": "integer",
                 "format": "int64"
+              },
+              "createdAt": {
+                "description": "Timestamp when the crawl was created",
+                "type": "string",
+                "format": "date-time"
+              },
+              "status": {
+                "description": "Current status of the crawl",
+                "type": "string",
+                "enum": [
+                  "RUNNING",
+                  "COMPLETED",
+                  "FAILED",
+                  "STOPPED"
+                ]
+              },
+              "completedAt": {
+                "description": "Timestamp when the crawl was completed",
+                "type": "string",
+                "format": "date-time"
+              },
+              "stopReason": {
+                "description": "Reason why the crawl was stopped",
+                "type": "string",
+                "enum": [
+                  "COMPLETED",
+                  "MAX_RESULTS",
+                  "MAX_DEPTH",
+                  "TIMEOUT",
+                  "ERROR",
+                  "MANUAL"
+                ]
+              },
+              "durationInSeconds": {
+                "description": "Duration of the crawl in seconds",
+                "type": "integer",
+                "minimum": 0
+              },
+              "anonymousUserId": {
+                "description": "ID of the anonymous user who initiated the crawl",
+                "type": "string"
+              },
+              "userId": {
+                "description": "ID of the user who initiated the crawl",
+                "type": "string"
+              },
+              "brandId": {
+                "description": "ID of the brand associated with the crawl",
+                "type": "string"
+              },
+              "engineType": {
+                "description": "Type of engine used for crawling",
+                "type": "string",
+                "enum": [
+                  "playwright",
+                  "cheerio"
+                ]
+              },
+              "startUrls": {
+                "description": "Array of URLs to start crawling from",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              },
+              "numberOfResults": {
+                "description": "Number of results collected",
+                "type": "integer",
+                "minimum": 0
+              },
+              "maxDepth": {
+                "description": "Maximum depth of pages to crawl",
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 99
+              },
+              "maxConcurrentPages": {
+                "description": "Maximum number of concurrent pages to crawl",
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 99
+              },
+              "maxResults": {
+                "description": "Maximum number of results to collect",
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 2500
+              },
+              "includeOnlyPaths": {
+                "description": "Array of paths to include in the crawl",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "excludePaths": {
+                "description": "Array of paths to exclude from the crawl",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "includeOnlyTags": {
+                "description": "Array of HTML tags to include",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "excludeTags": {
+                "description": "Array of HTML tags to exclude",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "stack": {
+                "description": "Type of stack used for crawling",
+                "type": "string",
+                "enum": [
+                  "NODE",
+                  "PYTHON"
+                ]
+              },
+              "origin": {
+                "description": "Origin of the crawl request",
+                "type": "string",
+                "enum": [
+                  "API",
+                  "WEB",
+                  "CLI"
+                ]
+              },
+              "timeout": {
+                "description": "Timeout duration in seconds",
+                "type": "integer",
+                "minimum": 0,
+                "default": 1800
               }
             }
           }
@@ -203,6 +349,65 @@
           },
           "message": {
             "type": "string"
+          }
+        }
+      },
+      "CreateCrawlDto": {
+        "type": "object",
+        "required": [
+          "startUrl",
+          "maxResults"
+        ],
+        "properties": {
+          "startUrl": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://example.com",
+            "description": "URL to start crawling from"
+          },
+          "maxDepth": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50,
+            "description": "Maximum depth of pages to crawl"
+          },
+          "maxResults": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 999,
+            "description": "Maximum number of results to collect"
+          },
+          "includeExternalLinks": {
+            "type": "boolean",
+            "description": "Whether to include external links in the crawl"
+          },
+          "includeOnlyPaths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of paths to include in the crawl"
+          },
+          "excludePaths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of paths to exclude from the crawl"
+          },
+          "includeOnlyTags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of HTML tags to include"
+          },
+          "excludeTags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of HTML tags to exclude"
           }
         }
       }

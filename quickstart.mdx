@@ -1,7 +1,65 @@
 ---
 title: "Quickstart"
-description: "Start building awesome documentation in under 5 minutes"
+description: "Get started with our Node.js SDK in minutes"
 ---
+
+## Installation
+
+Install the SDK using npm:
+
+```bash
+npm install @your-org/sdk
+```
+
+## Basic Usage
+
+Here's a simple example to get you started:
+
+```javascript
+const { Client } = require('@your-org/sdk');
+
+// Initialize the client with your API key
+const client = new Client({
+  apiKey: 'your-api-key-here'
+});
+
+// Make your first API call
+async function main() {
+  try {
+    const response = await client.getData();
+    console.log('Success:', response);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+main();
+```
+
+## Configuration
+
+The SDK can be configured with the following options:
+
+```javascript
+const client = new Client({
+  apiKey: 'your-api-key-here',  // Required
+  environment: 'production',     // Optional: 'production' or 'sandbox'
+  timeout: 5000,                // Optional: request timeout in milliseconds
+  maxRetries: 3                 // Optional: number of retry attempts
+});
+```
+
+## Next Steps
+
+- Check out our [API Reference](/api-reference) for detailed endpoint documentation
+- Learn about [Authentication](/essentials/authentication) and security best practices
+- Explore [Advanced Usage](/essentials/advanced-usage) for more complex scenarios
+
+## Need Help?
+
+- Visit our [GitHub repository](https://github.com/your-org/sdk) for examples and issues
+- Join our [Discord community](https://discord.gg/your-community) for real-time support
+- Contact our [support team](mailto:support@your-org.com) for assistance
 
 ```bash
 npm i olyptik

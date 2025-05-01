@@ -1,0 +1,110 @@
+---
+title: 'Create Crawl'
+openapi: 'POST /crawls'
+---
+
+Creates a new crawl job using the API key authentication.
+
+## Request
+
+### Headers
+
+- `Authorization`: API key for authentication
+
+### Body
+
+```json
+{
+  "startUrls": ["https://example.com"],
+  "engine": "playwright",
+  "maxDepth": 5,
+  "maxResults": 50,
+  "includeExternalLinks": false,
+  "stack": "react",
+  "includeOnlyPaths": ["/blog"],
+  "excludePaths": ["/admin"],
+  "includeOnlyTags": ["article"],
+  "excludeTags": ["nav"],
+  "maxConcurrentPages": 5
+}
+```
+
+### Schema
+
+```typescript
+export class StartCrawlPayload {
+    @IsString({ each: true })
+    @IsNotEmpty()
+    @IsUrl({}, { each: true })
+    startUrls: string[];
+
+    @IsOptional()
+    @IsEnum(EngineType)
+    engine: EngineType;
+
+    @IsNumber()
+    @IsNotEmpty()
+    @Max(50)
+    @Min(1)
+    maxDepth: number;
+
+    @IsNumber()
+    @IsNotEmpty()
+    @Max(999)
+    @Min(1)
+    maxResults: number;
+
+    @IsBoolean()
+    @IsOptional()
+    includeExternalLinks: boolean;
+
+    @IsOptional()
+    @IsEnum(StackType)
+    stack?: StackType;
+
+    includeOnlyPaths: string[];
+    excludePaths: string[];
+    includeOnlyTags: string[];
+    excludeTags: string[];
+    origin: Origin;
+
+    maxConcurrentPages: number;
+}
+
+export enum EngineType {
+    PLAYWRIGHT = 'playwright',
+    CHEERIO = 'cheerio'
+}
+```
+
+| Field | Type | Required | Description | Validation |
+|-------|------|----------|-------------|------------|
+| startUrls | string[] | Yes | Array of URLs to start crawling from | Must be valid URLs |
+| engine | string | No | Crawling engine to use | Must be either 'playwright' or 'cheerio' |
+| maxDepth | number | Yes | Maximum depth of pages to crawl | Between 1-50 |
+| maxResults | number | Yes | Maximum number of results to collect | Between 1-999 |
+| includeExternalLinks | boolean | No | Whether to include external links in the crawl | - |
+| stack | string | No | Technology stack to target (e.g. react) | Must be a valid StackType |
+| includeOnlyPaths | string[] | No | Array of paths to include in the crawl | - |
+| excludePaths | string[] | No | Array of paths to exclude from the crawl | - |
+| includeOnlyTags | string[] | No | Array of HTML tags to include | - |
+| excludeTags | string[] | No | Array of HTML tags to exclude | - |
+| maxConcurrentPages | number | No | Maximum number of concurrent pages to crawl | - |
+
+## Response
+
+```json
+{
+  "id": "crawl-id",
+  "status": "running",
+  "startUrls": ["https://example.com"],
+  "createdAt": "2024-03-20T12:00:00Z",
+  "updatedAt": "2024-03-20T12:00:00Z"
+}
+```
+
+## Errors
+
+- `401 Unauthorized`: Invalid or missing API key
+- `400 Bad Request`: Invalid request payload
+- `500 Internal Server Error`: Error starting the crawl 
