@@ -97,37 +97,6 @@
       }
     },
     "/crawls/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
       "get": {
         "description": "Returns a single crawl based on the ID supplied",
         "parameters": [
@@ -153,11 +122,76 @@
             }
           }
         }
+      },
+      "delete": {
+        "description": "Aborts a single crawl based on the ID supplied",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of plant to delete",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+            "200": {
+              "description": "Crawl aborted",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Crawl"
+                  }
+                }
+              }
+            },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/crawls/{id}/crawl-results": {
+      "get": {
+        "description": "Returns all crawl results from the system that the user has access to",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of crawl to return",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Crawl results response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrawlResult"
+                }
+              }
+            }
+          }
+        }
       }
     }
   },
   "webhooks": {
-    "/plant/webhook": {
+    "/crawls/webhook": {
       "post": {
         "description": "Information about a new plant added to the store",
         "requestBody": {
@@ -165,7 +199,27 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewPlant"
+                "$ref": "#/components/schemas/Crawl"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Return a 200 status to indicate that the data was received successfully"
+          }
+        }
+      }
+    },
+    "/crawl-results/created": {
+      "post": {
+        "description": "Information about a new plant added to the store",
+        "requestBody": {
+          "description": "Plant added to the store",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrawlResult"
               }
             }
           }
@@ -336,22 +390,6 @@
           }
         ]
       },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
-          }
-        }
-      },
       "CreateCrawlDto": {
         "type": "object",
         "required": [
@@ -410,7 +448,96 @@
             "description": "Array of HTML tags to exclude"
           }
         }
-      }
+      },
+      "CrawlResult": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the crawl result",
+            "example": "cr_123456789"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the result was created",
+            "example": "2024-03-20T15:30:45Z"
+          },
+          "crawlId": {
+            "type": "string",
+            "description": "ID of the crawl that generated this result",
+            "example": "c_987654321"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL of the crawled page",
+            "example": "https://example.com/products/smartphone"
+          },
+          "content": {
+            "type": "string",
+            "description": "Content extracted from the crawled page",
+            "example": "Latest Smartphone Model - Features include 6.5\" display, 256GB storage, and 48MP camera. Available in Black and Silver."
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Additional metadata about the crawled page",
+            "properties": {
+              "title": {
+                "type": "string",
+                "description": "Page title",
+                "example": "Smartphone X - Example Store"
+              },
+              "description": {
+                "type": "string",
+                "description": "Page description",
+                "example": "Shop the latest Smartphone X with advanced features and premium design."
+              },
+              "headers": {
+                "type": "object",
+                "description": "HTTP headers of the response",
+                "example": {
+                  "content-type": "text/html; charset=UTF-8",
+                  "server": "nginx/1.18.0",
+                  "x-frame-options": "SAMEORIGIN"
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "id": "cr_123456789",
+          "createdAt": "2024-03-20T15:30:45Z",
+          "crawlId": "c_987654321",
+          "url": "https://example.com/products/smartphone",
+          "content": "Latest Smartphone Model - Features include 6.5\" display, 256GB storage, and 48MP camera. Available in Black and Silver.",
+          "metadata": {
+            "title": "Smartphone X - Example Store",
+            "description": "Shop the latest Smartphone X with advanced features and premium design.",
+            "headers": {
+              "content-type": "text/html; charset=UTF-8",
+              "server": "nginx/1.18.0",
+              "x-frame-options": "SAMEORIGIN"
+            }
+          }
+        }
+      },
+      "Error": {
+        "required": [
+          "error",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
     },
     "securitySchemes": {
       "bearerAuth": {

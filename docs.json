@@ -66,13 +66,19 @@
             ]
           },
           {
-            "group": "Endpoint Examples",
+            "group": "Crawls",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/get-crawl",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "api-reference/endpoint/crawls/get-crawl",
+              "api-reference/endpoint/crawls/create",
+              "api-reference/endpoint/crawls/crawl-status-change",
+              "api-reference/endpoint/crawls/abort"
+            ]
+          },
+          {
+            "group": "Crawl Results",
+            "pages": [
+              "api-reference/endpoint/crawl-results/get-crawl-results",
+              "api-reference/endpoint/crawl-results/created"
             ]
           }
         ]
