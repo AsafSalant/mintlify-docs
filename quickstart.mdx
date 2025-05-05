@@ -1,52 +1,175 @@
 ---
 title: "Quickstart"
-description: "Get started with our Node.js SDK in minutes"
+description: "Get started with Olptik in minutes"
 ---
 
-## Installation
+## Introduction
 
-Install the SDK using npm:
+Olptik is a powerful web scraping and data extraction platform that helps you gather and process web data efficiently. You can get started with Olptik in two ways:
+
+1. Using our Node.js SDK (recommended for Node.js applications)
+2. Using our REST API directly (suitable for any programming language)
+
+<Card title="Get started with Node SDK" icon="cube" href="/SDK's/node">
+   crawling action going quickly
+</Card>
+
+## Getting Started with the API
+
+### Authentication
+
+First, you'll need an API key. You can get one from your [dashboard](https://dashboard.olptik.com). Include it in your requests using the Authorization header:
 
 ```bash
-npm install @your-org/sdk
+Authorization: Bearer your-api-key-here
 ```
 
-## Basic Usage
+### Create Your First Crawl
 
-Here's a simple example to get you started:
+Start by creating a crawl with your target URL and selectors:
 
-```javascript
-const { Client } = require('@your-org/sdk');
+<CodeGroup>
 
-// Initialize the client with your API key
-const client = new Client({
-  apiKey: 'your-api-key-here'
-});
+```javascript javascript
+import Olptik = from "olymptik";
 
-// Make your first API call
-async function main() {
-  try {
-    const response = await client.getData();
-    console.log('Success:', response);
-  } catch (error) {
-    console.error('Error:', error);
+const client = new Olptik({ apiKey: 'your-api-key-here' });
+
+const crawl = await client.createCrawl({
+    url: 'https://example.com',
+    maxResults: 50
+  });
+  
+console.log('Crawl created:', crawl.id);
+```
+
+```python python
+from olyptik import Olptik
+
+client = Olptik(api_key='your-api-key-here')
+
+def create_crawl():
+    crawl = client.create_crawl(
+        url='https://example.com',
+        selectors={
+            'title': 'h1',
+            'description': 'meta[name="description"]'
+        }
+    )
+    
+    print('Crawl created:', crawl.id)
+    return crawl
+```
+
+```bash curl
+curl -X POST https://api.olptik.com/v1/crawls \
+  -H "Authorization: Bearer your-api-key-here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://example.com",
+    "selectors": {
+      "title": "h1",
+      "description": "meta[name=\"description\"]"
+    }
+  }'
+```
+
+</CodeGroup>
+
+The response will include a `crawl_id` that you'll use to track and retrieve results:
+
+```json
+{
+  "id": "crawl_123",
+  "status": "pending",
+  "created_at": "2024-03-21T10:00:00Z"
+}
+```
+
+### Monitor Crawl Status
+
+You have two options to track your crawl's progress:
+
+1. **Poll the Status** (Simple approach):
+
+<CodeGroup>
+
+```javascript javascript
+async function getCrawlStatus(crawlId) {
+  const status = await client.getCrawl(crawlId);
+  console.log('Crawl status:', status);
+  return status;
+}
+```
+
+```python python
+def get_crawl_status(crawl_id):
+    status = client.get_crawl(crawl_id)
+    print('Crawl status:', status)
+    return status
+```
+
+```bash curl
+curl https://api.olptik.com/v1/crawls/{crawl_id} \
+  -H "Authorization: Bearer your-api-key-here"
+```
+
+</CodeGroup>
+
+2. **Webhook Notifications** (Recommended for production):
+Configure a webhook URL in your dashboard to receive real-time status updates:
+
+```json
+{
+  "event": "crawl.status_changed",
+  "data": {
+    "crawl_id": "crawl_123",
+    "status": "completed",
+    "timestamp": "2024-03-21T10:00:00Z"
   }
 }
-
-main();
 ```
 
-## Configuration
+### Get Crawl Results
 
-The SDK can be configured with the following options:
+Once the crawl is complete, retrieve the results:
 
-```javascript
-const client = new Client({
-  apiKey: 'your-api-key-here',  // Required
-  environment: 'production',     // Optional: 'production' or 'sandbox'
-  timeout: 5000,                // Optional: request timeout in milliseconds
-  maxRetries: 3                 // Optional: number of retry attempts
-});
+<CodeGroup>
+
+```javascript javascript
+async function getCrawlResults(crawlId) {
+  const results = await client.getCrawlResults(crawlId);
+  console.log('Crawl results:', results);
+  return results;
+}
+```
+
+```python python
+def get_crawl_results(crawl_id):
+    results = client.get_crawl_results(crawl_id)
+    print('Crawl results:', results)
+    return results
+```
+
+```bash curl
+curl https://api.olptik.com/v1/crawls/{crawl_id}/results \
+  -H "Authorization: Bearer your-api-key-here"
+```
+
+</CodeGroup>
+
+Example response:
+```json
+{
+  "data": {
+    "title": "Example Domain",
+    "description": "This domain is for use in examples."
+  },
+  "metadata": {
+    "crawled_at": "2024-03-21T10:00:00Z",
+    "url": "https://example.com"
+  }
+}
 ```
 
 ## Next Steps
@@ -57,12 +180,6 @@ const client = new Client({
 
 ## Need Help?
 
-- Visit our [GitHub repository](https://github.com/your-org/sdk) for examples and issues
-- Join our [Discord community](https://discord.gg/your-community) for real-time support
-- Contact our [support team](mailto:support@your-org.com) for assistance
-
-```bash
-npm i olyptik
-```
-
-Learn how to update your docs locally and deploy them to the publi
+- Visit our [GitHub repository](https://github.com/olptik) for examples and issues
+- Join our [Discord community](https://discord.gg/olptik) for real-time support
+- Contact our [support team](mailto:support@olptik.com) for assistance
