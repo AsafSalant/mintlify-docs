@@ -16,8 +16,7 @@
           {
             "group": "Get Started",
             "pages": [
-              "quickstart",
-              "development"
+              "quickstart"
             ]
           },
           {
@@ -39,8 +38,7 @@
           {
             "group": "Get Started",
             "pages": [
-              "quickstart",
-              "development"
+              "sdks/quickstart"
             ]
           },
           {

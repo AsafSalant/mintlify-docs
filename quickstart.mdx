@@ -7,8 +7,8 @@ description: "Get started with Olptik in minutes"
 
 Olptik is a powerful web scraping and data extraction platform that helps you gather and process web data efficiently. You can get started with Olptik in two ways:
 
-1. Using our Node.js SDK (recommended for Node.js applications)
-2. Using our REST API directly (suitable for any programming language)
+1. Using our Node SDK
+2. Using our REST API directly
 
 <Card title="Get started with Node SDK" icon="cube" href="/SDK's/node">
    crawling action going quickly
@@ -18,7 +18,7 @@ Olptik is a powerful web scraping and data extraction platform that helps you ga
 
 ### Authentication
 
-First, you'll need an API key. You can get one from your [dashboard](https://dashboard.olptik.com). Include it in your requests using the Authorization header:
+First, you'll need an API key. You can get one from your [dashboard](https://app.olptik.com/0/settings/crawl). Include it in your requests using the Authorization header:
 
 ```bash
 Authorization: Bearer your-api-key-here
@@ -26,35 +26,34 @@ Authorization: Bearer your-api-key-here
 
 ### Create Your First Crawl
 
-Start by creating a crawl with your target URL and selectors:
+Start by creating a crawl with your target URL:
 
 <CodeGroup>
 
 ```javascript javascript
-import Olptik = from "olymptik";
+// npm i olyptik
 
-const client = new Olptik({ apiKey: 'your-api-key-here' });
+import Olptik = from "olyptik";
+
+const client = new Olptik({ apiKey: 'your-api-key' });
 
 const crawl = await client.createCrawl({
-    url: 'https://example.com',
-    maxResults: 50
+    startUrl: 'https://example.com',
+    maxResults: 10
   });
   
 console.log('Crawl created:', crawl.id);
 ```
 
 ```python python
-from olyptik import Olptik
+from olyptik import Olyptik
 
-client = Olptik(api_key='your-api-key-here')
+client = Olyptik(api_key='your-api-key')
 
 def create_crawl():
     crawl = client.create_crawl(
-        url='https://example.com',
-        selectors={
-            'title': 'h1',
-            'description': 'meta[name="description"]'
-        }
+        startUrl= 'https://example.com',
+        maxResults= 10
     )
     
     print('Crawl created:', crawl.id)
@@ -63,14 +62,11 @@ def create_crawl():
 
 ```bash curl
 curl -X POST https://api.olptik.com/v1/crawls \
-  -H "Authorization: Bearer your-api-key-here" \
+  -H "Authorization: Bearer your-api-key" \
   -H "Content-Type: application/json" \
   -d '{
-    "url": "https://example.com",
-    "selectors": {
-      "title": "h1",
-      "description": "meta[name=\"description\"]"
-    }
+    "startUrl": "https://example.com",
+    "maxResults": 10
   }'
 ```
 
@@ -116,7 +112,7 @@ curl https://api.olptik.com/v1/crawls/{crawl_id} \
 
 </CodeGroup>
 
-2. **Webhook Notifications** (Recommended for production):
+2. **Webhook Notifications**:
 Configure a webhook URL in your dashboard to receive real-time status updates:
 
 ```json
