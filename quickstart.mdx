@@ -21,7 +21,7 @@ Olptik is a powerful web scraping and data extraction platform that helps you ga
 First, you'll need an API key. You can get one from your [dashboard](https://app.olptik.com/0/settings/crawl). Include it in your requests using the Authorization header:
 
 ```bash
-Authorization: Bearer your-api-key-here
+Authorization: Bearer your-api-key
 ```
 
 ### Create Your First Crawl
@@ -33,31 +33,16 @@ Start by creating a crawl with your target URL:
 ```javascript javascript
 // npm i olyptik
 
-import Olptik = from "olyptik";
+import Olyptik = from "olyptik";
 
-const client = new Olptik({ apiKey: 'your-api-key' });
+const olyptik = new Olyptik({ apiKey: 'your-api-key' });
 
-const crawl = await client.createCrawl({
+const crawl = await olyptik.createCrawl({
     startUrl: 'https://example.com',
     maxResults: 10
   });
   
 console.log('Crawl created:', crawl.id);
-```
-
-```python python
-from olyptik import Olyptik
-
-client = Olyptik(api_key='your-api-key')
-
-def create_crawl():
-    crawl = client.create_crawl(
-        startUrl= 'https://example.com',
-        maxResults= 10
-    )
-    
-    print('Crawl created:', crawl.id)
-    return crawl
 ```
 
 ```bash curl
@@ -98,13 +83,6 @@ async function getCrawlStatus(crawlId) {
 }
 ```
 
-```python python
-def get_crawl_status(crawl_id):
-    status = client.get_crawl(crawl_id)
-    print('Crawl status:', status)
-    return status
-```
-
 ```bash curl
 curl https://api.olptik.com/v1/crawls/{crawl_id} \
   -H "Authorization: Bearer your-api-key-here"
@@ -138,13 +116,6 @@ async function getCrawlResults(crawlId) {
   console.log('Crawl results:', results);
   return results;
 }
-```
-
-```python python
-def get_crawl_results(crawl_id):
-    results = client.get_crawl_results(crawl_id)
-    print('Crawl results:', results)
-    return results
 ```
 
 ```bash curl
