@@ -32,38 +32,54 @@ Start by creating a crawl with your target URL:
 
 ```javascript javascript
 // npm i olyptik
-
-import Olyptik = from "olyptik";
+import Olyptik from "olyptik";
 
 const olyptik = new Olyptik({ apiKey: 'your-api-key' });
 
 const crawl = await olyptik.createCrawl({
     startUrl: 'https://example.com',
-    maxResults: 10
+    maxResults: 50
   });
   
 console.log('Crawl created:', crawl.id);
 ```
 
 ```bash curl
-curl -X POST https://api.olptik.com/v1/crawls \
+curl -X POST https://api.olyptik.com/v1/crawls \
   -H "Authorization: Bearer your-api-key" \
   -H "Content-Type: application/json" \
   -d '{
     "startUrl": "https://example.com",
-    "maxResults": 10
+    "maxResults": 50
   }'
 ```
 
 </CodeGroup>
 
-The response will include a `crawl_id` that you'll use to track and retrieve results:
+The response will include a `crawl` object that you'll use to track and retrieve results:
 
 ```json
 {
   "id": "crawl_123",
-  "status": "pending",
-  "created_at": "2024-03-21T10:00:00Z"
+  "status": "running",
+  "startUrls": ["https://example.com"],
+  "maxDepth": 5,
+  "maxResults": 50,
+  "numberOfResults": 0,
+  "engineType": "playwright",
+  "includeLinks": true,
+  "includeOnlyPaths": ["/blog"],
+  "excludePaths": ["/admin"],
+  "includeOnlyTags": ["article"],
+  "excludeTags": ["nav"],
+  "stack": "react",
+  "origin": "api",
+  "timeout": 1800,
+  "durationInSeconds": 0,
+  "completedAt": null,
+  "stopReason": null,
+  "createdAt": "2024-03-21T10:00:00Z",
+  "updatedAt": "2024-03-21T10:00:00Z"
 }
 ```
 
@@ -84,7 +100,7 @@ async function getCrawlStatus(crawlId) {
 ```
 
 ```bash curl
-curl https://api.olptik.com/v1/crawls/{crawl_id} \
+curl https://api.olyptik.com/v1/crawls/{crawl_id} \
   -H "Authorization: Bearer your-api-key-here"
 ```
 
@@ -147,6 +163,5 @@ Example response:
 
 ## Need Help?
 
-- Visit our [GitHub repository](https://github.com/olptik) for examples and issues
-- Join our [Discord community](https://discord.gg/olptik) for real-time support
-- Contact our [support team](mailto:support@olptik.com) for assistance
+
+- Contact our [support team](mailto:support@olyptik.com) for assistance

@@ -23,9 +23,7 @@ First, you'll need to initialize the SDK with your API key. You can either pass 
 import Olyptik from 'olyptik';
 
 // Initialize with API key
-const client = new Olyptik({
-  apiKey: 'your-api-key-here'
-});
+const client = new Olyptik({ apiKey: 'your-api-key-here' });
 ```
 
 ## Basic Usage
@@ -39,11 +37,9 @@ const crawl = await client.runCrawl({
   startUrl: 'https://example.com',
   maxDepth: 2,
   maxResults: 100,
-  includeExternalLinks: false,
-  includeOnlyPaths: ['/blog', '/docs'],
-  excludePaths: ['/admin', '/private'],
-  includeOnlyTags: ['article', 'main'],
-  excludeTags: ['nav', 'footer']
+  useSitemap: false,
+  timeout: 60,
+  includeLinks: false
 });
 ```
 
