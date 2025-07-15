@@ -5,26 +5,19 @@ description: "Get started with Olyptik in minutes"
 
 ## Introduction
 
-Olptik is a powerful web scraping and data extraction platform that helps you gather and process web data efficiently. You can get started with Olptik in two ways:
+Olptik is a powerful web scraping and data extraction platform that helps you gather and process web data efficiently.
 
-1. Using our Node SDK
-2. Using our REST API directly
-
-<Card title="Get started with Node SDK" icon="cube" href="/SDK's/node">
-   crawling action going quickly
-</Card>
-
-## Getting Started with the API
+## Getting started with the API
 
 ### Authentication
 
-First, you'll need an API key. You can get one from your [dashboard](https://app.olptik.com/0/settings/crawl). Include it in your requests using the Authorization header:
+First, you'll need an API key. You can get one from your [settings page](https://app.olptik.com/0/settings/crawl). Include it in your requests using the Authorization header:
 
 ```bash
 Authorization: Bearer your-api-key
 ```
 
-### Create Your First Crawl
+### Step 1: Create a crawl
 
 Start by creating a crawl with your target URL:
 
@@ -37,9 +30,9 @@ import Olyptik from "olyptik";
 const olyptik = new Olyptik({ apiKey: 'your-api-key' });
 
 const crawl = await olyptik.createCrawl({
-    startUrl: 'https://example.com',
-    maxResults: 50
-  });
+  startUrl: 'https://example.com',
+  maxResults: 50
+});
   
 console.log('Crawl created:', crawl.id);
 ```
@@ -58,7 +51,7 @@ curl -X POST https://api.olyptik.com/v1/crawls \
 
 The response will include a `crawl` object that you'll use to track and retrieve results:
 
-```json
+```json Crawl object
 {
   "id": "crawl_123",
   "status": "running",
@@ -66,28 +59,71 @@ The response will include a `crawl` object that you'll use to track and retrieve
   "maxDepth": 5,
   "maxResults": 50,
   "numberOfResults": 0,
-  "engineType": "playwright",
-  "includeLinks": true,
-  "includeOnlyPaths": ["/blog"],
-  "excludePaths": ["/admin"],
-  "includeOnlyTags": ["article"],
-  "excludeTags": ["nav"],
-  "stack": "react",
+  "includeLinks": false,
   "origin": "api",
-  "timeout": 1800,
+  "timeout": 60,
   "durationInSeconds": 0,
   "completedAt": null,
-  "stopReason": null,
   "createdAt": "2024-03-21T10:00:00Z",
   "updatedAt": "2024-03-21T10:00:00Z"
 }
 ```
 
-### Monitor Crawl Status
+### Step 2: Monitor crawl status
 
 You have two options to track your crawl's progress:
 
-1. **Poll the Status** (Simple approach):
+1. **Webhook Notifications**:
+Configure a webhook URL in your settings page to receive real-time status updates.
+It can be for either a crawl status changes, and/or for every crawl result (single page) crawled 
+
+<CodeGroup>
+```json Crawl status change event
+{
+  "secret": "u9dv22c5",
+  "eventType": "crawl_status_change",
+  "data": {
+    "crawl": {
+      "id": "6870336416bf934c31bffdd8"
+      "status": "timed_out",
+      "durationInSeconds": 45001,
+      "brandId": "680e8bc08cdb14f10180db6a",
+      "startUrls": [ "https://gitbook.com"],
+      "numberOfResults": 19,
+      "useSitemap": false,
+      "maxDepth": 5,
+      "maxResults": 20,
+      "includeLinks": false,
+      "origin": "api",
+      "timeout": 60,
+      "createdAt": "2025-07-10T21:40:52.580Z",
+      "updatedAt": "2025-07-11T10:10:54.251Z",
+      "completedAt": "2025-07-11T10:10:54.250Z",
+    }
+  }
+}
+```
+```json Crawl result created event
+{
+  "secret": "u9dv22c5",
+  "eventType": "crawl_result_created",
+  "data": {
+    "crawlResult": {
+      "id": "6870e3c687c81925622df89e"
+      "crawlId": "6870e36787c81925622df818",
+      "brandId": "680e8bc08cdb14f10180db6a",
+      "url": "https://example.com/solutions/network-observability",
+      "title": "Kubernetes Network Observability",
+      "markdown": "## Awesome website content...",
+      "createdAt": "2025-07-11T10:13:26.966Z",
+      "updatedAt": "2025-07-11T10:13:26.966Z",
+    }
+  }
+}
+```
+</CodeGroup>
+
+2. **Poll the crawl** to check for status changes:
 
 <CodeGroup>
 
@@ -105,21 +141,6 @@ curl https://api.olyptik.com/v1/crawls/{crawl_id} \
 ```
 
 </CodeGroup>
-
-2. **Webhook Notifications**:
-Configure a webhook URL in your dashboard to receive real-time status updates:
-
-```json
-{
-  "event": "crawl.status_changed",
-  "data": {
-    "crawl_id": "crawl_123",
-    "status": "completed",
-    "timestamp": "2024-03-21T10:00:00Z"
-  }
-}
-```
-
 ### Get Crawl Results
 
 Once the crawl is complete, retrieve the results:
