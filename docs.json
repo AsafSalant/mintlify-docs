@@ -75,8 +75,7 @@
           {
             "group": "Crawl Results",
             "pages": [
-              "api-reference/endpoint/crawl-results/get-crawl-results",
-              "api-reference/endpoint/crawl-results/created"
+              "api-reference/endpoint/crawl-results/get-crawl-results"
             ]
           }
         ]
