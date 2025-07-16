@@ -113,6 +113,7 @@ It can be for either a crawl status changes, and/or for every crawl result (sing
       "crawlId": "6870e36787c81925622df818",
       "brandId": "680e8bc08cdb14f10180db6a",
       "url": "https://example.com/solutions/network-observability",
+      "depthOfUrl": 4,
       "title": "Kubernetes Network Observability",
       "markdown": "## Awesome website content...",
       "createdAt": "2025-07-11T10:13:26.966Z",
@@ -137,11 +138,11 @@ async function getCrawlStatus(crawlId) {
 
 ```bash curl
 curl https://api.olyptik.com/v1/crawls/{crawl_id} \
-  -H "Authorization: Bearer your-api-key-here"
+  -H "Authorization: Bearer your-api-key"
 ```
 
 </CodeGroup>
-### Get Crawl Results
+### Step 3: Get Crawl Results
 
 Once the crawl is complete, retrieve the results:
 
@@ -157,7 +158,7 @@ async function getCrawlResults(crawlId) {
 
 ```bash curl
 curl https://api.olptik.com/v1/crawls/{crawl_id}/results \
-  -H "Authorization: Bearer your-api-key-here"
+  -H "Authorization: Bearer your-api-key"
 ```
 
 </CodeGroup>

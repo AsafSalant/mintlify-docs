@@ -66,7 +66,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateCrawlDto"
+                "$ref": "#/components/schemas/StartCrawlPayload"
               }
             }
           },
@@ -138,16 +138,16 @@
           }
         ],
         "responses": {
-            "200": {
-              "description": "Crawl aborted",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/Crawl"
-                  }
+          "200": {
+            "description": "Crawl aborted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Crawl"
                 }
               }
-            },
+            }
+          },
           "400": {
             "description": "unexpected error",
             "content": {
@@ -237,15 +237,15 @@
       "Crawl": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/CreateCrawl"
+            "$ref": "#/components/schemas/CreateCrawlDto"
           },
           {
             "type": "object",
             "properties": {
               "id": {
                 "description": "Identification number of the crawl",
-                "type": "integer",
-                "format": "int64"
+                "type": "string",
+                "example": "c_123456789"
               },
               "createdAt": {
                 "description": "Timestamp when the crawl was created",
@@ -256,53 +256,29 @@
                 "description": "Current status of the crawl",
                 "type": "string",
                 "enum": [
-                  "RUNNING",
-                  "COMPLETED",
-                  "FAILED",
-                  "STOPPED"
-                ]
+                  "running",
+                  "succeeded",
+                  "failed",
+                  "aborted",
+                  "timed_out",
+                  "error"
+                ],
+                "example": "timed_out"
               },
               "completedAt": {
                 "description": "Timestamp when the crawl was completed",
                 "type": "string",
                 "format": "date-time"
               },
-              "stopReason": {
-                "description": "Reason why the crawl was stopped",
-                "type": "string",
-                "enum": [
-                  "COMPLETED",
-                  "MAX_RESULTS",
-                  "MAX_DEPTH",
-                  "TIMEOUT",
-                  "ERROR",
-                  "MANUAL"
-                ]
-              },
               "durationInSeconds": {
                 "description": "Duration of the crawl in seconds",
                 "type": "integer",
-                "minimum": 0
-              },
-              "anonymousUserId": {
-                "description": "ID of the anonymous user who initiated the crawl",
-                "type": "string"
-              },
-              "userId": {
-                "description": "ID of the user who initiated the crawl",
-                "type": "string"
+                "minimum": 0,
+                "example": 1800
               },
               "brandId": {
                 "description": "ID of the brand associated with the crawl",
                 "type": "string"
-              },
-              "engineType": {
-                "description": "Type of engine used for crawling",
-                "type": "string",
-                "enum": [
-                  "playwright",
-                  "cheerio"
-                ]
               },
               "startUrls": {
                 "description": "Array of URLs to start crawling from",
@@ -310,87 +286,51 @@
                 "items": {
                   "type": "string",
                   "format": "uri"
-                }
+                },
+                "example": [
+                  "https://example.com"
+                ]
               },
               "numberOfResults": {
                 "description": "Number of results collected",
                 "type": "integer",
-                "minimum": 0
+                "minimum": 0,
+                "example": 100
               },
               "maxDepth": {
                 "description": "Maximum depth of pages to crawl",
                 "type": "integer",
                 "minimum": 1,
-                "maximum": 99
-              },
-              "maxConcurrentPages": {
-                "description": "Maximum number of concurrent pages to crawl",
-                "type": "integer",
-                "minimum": 1,
-                "maximum": 99
+                "maximum": 99,
+                "example": 3
               },
               "maxResults": {
                 "description": "Maximum number of results to collect",
                 "type": "integer",
                 "minimum": 1,
-                "maximum": 2500
-              },
-              "includeOnlyPaths": {
-                "description": "Array of paths to include in the crawl",
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "excludePaths": {
-                "description": "Array of paths to exclude from the crawl",
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "includeOnlyTags": {
-                "description": "Array of HTML tags to include",
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "excludeTags": {
-                "description": "Array of HTML tags to exclude",
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "stack": {
-                "description": "Type of stack used for crawling",
-                "type": "string",
-                "enum": [
-                  "NODE",
-                  "PYTHON"
-                ]
+                "maximum": 110
               },
               "origin": {
                 "description": "Origin of the crawl request",
                 "type": "string",
                 "enum": [
-                  "API",
-                  "WEB",
-                  "CLI"
-                ]
+                  "api",
+                  "web"
+                ],
+                "example": "web"
               },
               "timeout": {
                 "description": "Timeout duration in seconds",
                 "type": "integer",
                 "minimum": 0,
-                "default": 1800
+                "default": 1800,
+                "example": 1800
               }
             }
           }
         ]
       },
-      "CreateCrawlDto": {
+      "StartCrawlPayload": {
         "type": "object",
         "required": [
           "startUrl",
@@ -403,49 +343,32 @@
             "example": "https://example.com",
             "description": "URL to start crawling from"
           },
-          "maxDepth": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 50,
-            "description": "Maximum depth of pages to crawl"
-          },
           "maxResults": {
             "type": "integer",
             "minimum": 1,
             "maximum": 999,
             "description": "Maximum number of results to collect"
           },
-          "includeExternalLinks": {
+          "maxDepth": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50,
+            "description": "Maximum depth of pages to crawl"
+          },
+          "useSitemap": {
+            "type": "boolean",
+            "description": "Whether to use sitemap.xml to crawl the website",
+            "example": false
+          },
+          "includeLinks": {
             "type": "boolean",
             "description": "Whether to include external links in the crawl"
           },
-          "includeOnlyPaths": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Array of paths to include in the crawl"
-          },
-          "excludePaths": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Array of paths to exclude from the crawl"
-          },
-          "includeOnlyTags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Array of HTML tags to include"
-          },
-          "excludeTags": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "Array of HTML tags to exclude"
+          "timeout": {
+            "type": "integer",
+            "minimum": 60,
+            "description": "Timeout duration in minutes",
+            "example": 60
           }
         }
       },
@@ -457,16 +380,15 @@
             "description": "Unique identifier for the crawl result",
             "example": "cr_123456789"
           },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Timestamp when the result was created",
-            "example": "2024-03-20T15:30:45Z"
-          },
           "crawlId": {
             "type": "string",
             "description": "ID of the crawl that generated this result",
             "example": "c_987654321"
+          },
+          "brandId": {
+            "type": "string",
+            "description": "ID of the brand associated with the crawl result",
+            "example": "b_123456789"
           },
           "url": {
             "type": "string",
@@ -474,51 +396,26 @@
             "description": "URL of the crawled page",
             "example": "https://example.com/products/smartphone"
           },
-          "content": {
+          "title": {
             "type": "string",
             "description": "Content extracted from the crawled page",
             "example": "Latest Smartphone Model - Features include 6.5\" display, 256GB storage, and 48MP camera. Available in Black and Silver."
           },
-          "metadata": {
-            "type": "object",
-            "description": "Additional metadata about the crawled page",
-            "properties": {
-              "title": {
-                "type": "string",
-                "description": "Page title",
-                "example": "Smartphone X - Example Store"
-              },
-              "description": {
-                "type": "string",
-                "description": "Page description",
-                "example": "Shop the latest Smartphone X with advanced features and premium design."
-              },
-              "headers": {
-                "type": "object",
-                "description": "HTTP headers of the response",
-                "example": {
-                  "content-type": "text/html; charset=UTF-8",
-                  "server": "nginx/1.18.0",
-                  "x-frame-options": "SAMEORIGIN"
-                }
-              }
-            }
-          }
-        },
-        "example": {
-          "id": "cr_123456789",
-          "createdAt": "2024-03-20T15:30:45Z",
-          "crawlId": "c_987654321",
-          "url": "https://example.com/products/smartphone",
-          "content": "Latest Smartphone Model - Features include 6.5\" display, 256GB storage, and 48MP camera. Available in Black and Silver.",
-          "metadata": {
-            "title": "Smartphone X - Example Store",
-            "description": "Shop the latest Smartphone X with advanced features and premium design.",
-            "headers": {
-              "content-type": "text/html; charset=UTF-8",
-              "server": "nginx/1.18.0",
-              "x-frame-options": "SAMEORIGIN"
-            }
+          "markdown": {
+            "type": "string",
+            "description": "Markdown content extracted from the crawled page",
+            "example": "## Latest Smartphone Model\n\nFeatures include 6.5\" display, 256GB storage, and 48MP camera. Available in Black and Silver."
+          },
+          "depthOfUrl": {
+            "type": "integer",
+            "description": "Depth of the URL in the crawl",
+            "example": 2
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the result was created",
+            "example": "2024-03-20T15:30:45Z"
           }
         }
       },
@@ -537,7 +434,7 @@
             "type": "string"
           }
         }
-      },
+      }
     },
     "securitySchemes": {
       "bearerAuth": {

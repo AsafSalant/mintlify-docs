@@ -19,13 +19,8 @@ Creates a new crawl job using the API key authentication.
   "engine": "playwright",
   "maxDepth": 5,
   "maxResults": 50,
-  "includeExternalLinks": false,
-  "stack": "react",
-  "includeOnlyPaths": ["/blog"],
-  "excludePaths": ["/admin"],
-  "includeOnlyTags": ["article"],
-  "excludeTags": ["nav"],
-  "maxConcurrentPages": 5
+  "useSitemap": false,
+  "includeLinks": false,
 }
 ```
 
@@ -83,7 +78,6 @@ export enum EngineType {
 | engine | string | No | Crawling engine to use | Must be either 'playwright' or 'cheerio' |
 | maxDepth | number | Yes | Maximum depth of pages to crawl | Between 1-50 |
 | maxResults | number | Yes | Maximum number of results to collect | Between 1-999 |
-| includeExternalLinks | boolean | No | Whether to include external links in the crawl | - |
 | stack | string | No | Technology stack to target (e.g. react) | Must be a valid StackType |
 | includeOnlyPaths | string[] | No | Array of paths to include in the crawl | - |
 | excludePaths | string[] | No | Array of paths to exclude from the crawl | - |

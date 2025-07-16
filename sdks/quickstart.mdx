@@ -23,7 +23,7 @@ First, you'll need to initialize the SDK with your API key. You can either pass 
 import Olyptik from 'olyptik';
 
 // Initialize with API key
-const client = new Olyptik({ apiKey: 'your-api-key-here' });
+const client = new Olyptik({ apiKey: 'your-api-key' });
 ```
 
 ## Basic Usage
@@ -62,7 +62,6 @@ The results are paginated, and you can specify the page number and limit per pag
 | startUrl | string | The URL to start crawling from |
 | maxDepth | number | Maximum depth of crawling |
 | maxResults | number | Maximum number of results to collect |
-| includeExternalLinks | boolean | Whether to include external links |
 | includeOnlyPaths | string[] | Only crawl URLs matching these paths |
 | excludePaths | string[] | Exclude URLs matching these paths |
 | includeOnlyTags | string[] | Only include content from these HTML tags |
