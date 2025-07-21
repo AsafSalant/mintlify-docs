@@ -5,21 +5,21 @@ description: "Get started with Olyptik in minutes"
 
 ## Introduction
 
-Olpytik is a powerful web scraping and data extraction platform that helps you gather and process web data efficiently.
+Olyptik is a powerful web scraping and data extraction platform that helps you gather and process web data efficiently. This guide will walk you through the essential steps to get started with our API.
 
-## Getting started with the API
+## Getting Started with the API
 
 ### Authentication
 
-First, you'll need an API key. You can get one from your [settings page](https://app.olptik.com/0/settings/crawl). Include it in your requests using the Authorization header:
+First, you'll need an API key. You can get one from your [settings page](https://app.olyptik.com/0/settings/crawl). Include it in your requests using the Authorization header:
 
 ```bash
 Authorization: Bearer your-api-key
 ```
 
-### Step 1: Create a crawl
+### Step 1: Create a Crawl
 
-Start by creating a crawl with your target URL:
+Start by creating a crawl with your target URL. This initiates the web scraping process:
 
 <CodeGroup>
 
@@ -59,7 +59,7 @@ The response will include a `crawl` object that you'll use to track and retrieve
   "maxDepth": 5,
   "maxResults": 50,
   "numberOfResults": 0,
-  "includeLinks": false,
+  "includeLinks": true,
   "origin": "api",
   "timeout": 60,
   "durationInSeconds": 0,
@@ -69,13 +69,18 @@ The response will include a `crawl` object that you'll use to track and retrieve
 }
 ```
 
-### Step 2: Monitor crawl status
+### Step 2: Monitor Crawl Status
 
 You have two options to track your crawl's progress:
 
-1. **Webhook Notifications**:
-Configure a webhook URL in your settings page to receive real-time status updates.
-It can be for either a crawl status changes, and/or for every crawl result (single page) crawled 
+#### Option 1: Webhook Notifications (Recommended)
+
+Configure a webhook URL in your [settings page](https://app.olyptik.com/0/settings/crawl) to receive real-time status updates. You can choose from two notification types:
+
+- **Crawl Status Changes**: Receive notifications when crawl status changes (succeeded, failed, timed out, etc.)
+- **Individual Results**: Receive notifications for each page crawled during the process
+
+You can enable either option or both simultaneously.
 
 <CodeGroup>
 ```json Crawl status change event
@@ -84,7 +89,7 @@ It can be for either a crawl status changes, and/or for every crawl result (sing
   "eventType": "crawl_status_change",
   "data": {
     "crawl": {
-      "id": "6870336416bf934c31bffdd8"
+      "id": "6870336416bf934c31bffdd8",
       "status": "timed_out",
       "durationInSeconds": 45001,
       "brandId": "680e8bc08cdb14f10180db6a",
@@ -98,7 +103,7 @@ It can be for either a crawl status changes, and/or for every crawl result (sing
       "timeout": 60,
       "createdAt": "2025-07-10T21:40:52.580Z",
       "updatedAt": "2025-07-11T10:10:54.251Z",
-      "completedAt": "2025-07-11T10:10:54.250Z",
+      "completedAt": "2025-07-11T10:10:54.250Z"
     }
   }
 }
@@ -124,13 +129,14 @@ It can be for either a crawl status changes, and/or for every crawl result (sing
 ```
 </CodeGroup>
 
-2. **Poll the crawl** to check for status changes:
+#### Option 2: Polling (Alternative)
+If you haven't configured webhook notifications, you can poll the crawl status:
 
 <CodeGroup>
 
 ```javascript javascript
 async function getCrawlStatus(crawlId) {
-  const status = await client.getCrawl(crawlId);
+  const status = await olyptik.getCrawl(crawlId);
   console.log('Crawl status:', status);
   return status;
 }
@@ -149,15 +155,14 @@ Once the crawl is complete, retrieve the results:
 <CodeGroup>
 
 ```javascript javascript
-async function getCrawlResults(crawlId) {
-  const results = await client.getCrawlResults(crawlId);
-  console.log('Crawl results:', results);
-  return results;
-}
+const page = 1;
+const itemsInPage = 50;
+const results = await olyptik.getCrawlResults(crawlId, page, itemsInPage);
+console.log(results);
 ```
 
 ```bash curl
-curl https://api.olptik.com/v1/crawls/{crawl_id}/results \
+curl https://api.olyptik.com/v1/crawls/{crawl_id}/results?page=1&limit=50 \
   -H "Authorization: Bearer your-api-key"
 ```
 
@@ -166,13 +171,73 @@ curl https://api.olptik.com/v1/crawls/{crawl_id}/results \
 Example response:
 ```json
 {
-  "data": {
-    "title": "Example Domain",
-    "description": "This domain is for use in examples."
-  },
-  "metadata": {
-    "crawled_at": "2024-03-21T10:00:00Z",
-    "url": "https://example.com"
+  "page": 1,
+  "limit": 10,
+  "totalPages": 2,
+  "totalResults": 19,
+  "results": [
+    {
+      "id": "6870e3c687c81925622df89e",
+      "crawlId": "6870e36787c81925622df818",
+      "brandId": "680e8bc08cdb14f10180db6a",
+      "url": "https://example.com/solutions/network-observability",
+      "depthOfUrl": 4,
+      "title": "Kubernetes Network Observability",
+      "markdown": "## Awesome website content...",
+      "createdAt": "2025-07-11T10:13:26.966Z"
+    },
+    {
+      "id": "6870e3c687c81925622df89f",
+      "crawlId": "6870e36787c81925622df818",
+      "brandId": "680e8bc08cdb14f10180db6a",
+      "url": "https://example.com/about",
+      "depthOfUrl": 2,
+      "title": "About Our Company",
+      "markdown": "## About page content...",
+      "createdAt": "2025-07-11T10:13:27.123Z"
+    }
+  ]
+}
+```
+
+## Complete Example
+
+Here's a complete example that demonstrates the full workflow:
+
+```javascript
+import Olyptik from "olyptik";
+
+const olyptik = new Olyptik({ apiKey: 'your-api-key' });
+
+async function scrapeWebsite() {
+  try {
+    // Step 1: Create crawl
+    const crawl = await olyptik.createCrawl({
+      startUrl: 'https://example.com',
+      maxResults: 50
+    });
+    console.log('Crawl created:', crawl.id);
+
+    // Step 2: Wait for completion (polling approach)
+    let isComplete = false;
+    while (!isComplete) {
+      const status = await olyptik.getCrawl(crawl.id);
+      console.log('Status:', status.status);
+      
+      if (status.status === 'completed' || status.status === 'failed') {
+        isComplete = true;
+      } else {
+        await new Promise(resolve => setTimeout(resolve, 30000)); // Wait 30 seconds
+      }
+    }
+
+    // Step 3: Get results
+    const results = await olyptik.getCrawlResults(crawl.id, 1, 50);
+    console.log('Total pages scraped:', results.totalResults);
+    
+    return results;
+  } catch (error) {
+    console.error('Error:', error);
   }
 }
 ```
@@ -187,3 +252,5 @@ Example response:
 
 
 - Contact our [support team](mailto:support@olyptik.com) for assistance
+- Join our [Discord community](https://discord.gg/olyptik) for discussions
+- Check our [FAQ](/essentials/faq) for common questions
