@@ -11,7 +11,7 @@ Olyptik is a powerful web scraping and data extraction platform that helps you g
 
 ### Authentication
 
-First, you'll need an API key. You can get one from your [settings page](https://app.olyptik.com/0/settings/crawl). Include it in your requests using the Authorization header:
+First, you'll need an API key. You can get one from your [settings page](https://app.olyptik.io/0/settings/crawl). Include it in your requests using the Authorization header:
 
 ```bash
 Authorization: Bearer your-api-key
@@ -38,7 +38,7 @@ console.log('Crawl created:', crawl.id);
 ```
 
 ```bash curl
-curl -X POST https://api.olyptik.com/v1/crawls \
+curl -X POST https://api.olyptik.io/v1/crawls \
   -H "Authorization: Bearer your-api-key" \
   -H "Content-Type: application/json" \
   -d '{
@@ -75,7 +75,7 @@ You have two options to track your crawl's progress:
 
 #### Option 1: Webhook Notifications (Recommended)
 
-Configure a webhook URL in your [settings page](https://app.olyptik.com/0/settings/crawl) to receive real-time status updates. You can choose from two notification types:
+Configure a webhook URL in your [settings page](https://app.olyptik.io/0/settings/crawl) to receive real-time status updates. You can choose from two notification types:
 
 - **Crawl Status Changes**: Receive notifications when crawl status changes (succeeded, failed, timed out, etc.)
 - **Individual Results**: Receive notifications for each page crawled during the process
@@ -143,7 +143,7 @@ async function getCrawlStatus(crawlId) {
 ```
 
 ```bash curl
-curl https://api.olyptik.com/v1/crawls/{crawl_id} \
+curl https://api.olyptik.io/v1/crawls/{crawl_id} \
   -H "Authorization: Bearer your-api-key"
 ```
 
@@ -162,7 +162,7 @@ console.log(results);
 ```
 
 ```bash curl
-curl https://api.olyptik.com/v1/crawls/{crawl_id}/results?page=1&limit=50 \
+curl https://api.olyptik.io/v1/crawls/{crawl_id}/results?page=1&limit=50 \
   -H "Authorization: Bearer your-api-key"
 ```
 
@@ -251,6 +251,6 @@ async function scrapeWebsite() {
 ## Need Help?
 
 
-- Contact our [support team](mailto:support@olyptik.com) for assistance
+- Contact our [support team](mailto:support@olyptik.io) for assistance
 - Join our [Discord community](https://discord.gg/olyptik) for discussions
 - Check our [FAQ](/essentials/faq) for common questions
