@@ -129,17 +129,13 @@ You can enable either option or both simultaneously.
 ```
 </CodeGroup>
 
-#### Option 2: Polling (Alternative)
+#### Option 2: Polling
 If you haven't configured webhook notifications, you can poll the crawl status:
 
 <CodeGroup>
 
 ```javascript javascript
-async function getCrawlStatus(crawlId) {
-  const status = await olyptik.getCrawl(crawlId);
-  console.log('Crawl status:', status);
-  return status;
-}
+const crawl = await olyptik.getCrawl(crawlId);
 ```
 
 ```bash curl
@@ -196,49 +192,8 @@ Example response:
       "markdown": "## About page content...",
       "createdAt": "2025-07-11T10:13:27.123Z"
     }
+		...
   ]
-}
-```
-
-## Complete Example
-
-Here's a complete example that demonstrates the full workflow:
-
-```javascript
-import Olyptik from "olyptik";
-
-const olyptik = new Olyptik({ apiKey: 'your-api-key' });
-
-async function scrapeWebsite() {
-  try {
-    // Step 1: Create crawl
-    const crawl = await olyptik.createCrawl({
-      startUrl: 'https://example.com',
-      maxResults: 50
-    });
-    console.log('Crawl created:', crawl.id);
-
-    // Step 2: Wait for completion (polling approach)
-    let isComplete = false;
-    while (!isComplete) {
-      const status = await olyptik.getCrawl(crawl.id);
-      console.log('Status:', status.status);
-      
-      if (status.status === 'completed' || status.status === 'failed') {
-        isComplete = true;
-      } else {
-        await new Promise(resolve => setTimeout(resolve, 30000)); // Wait 30 seconds
-      }
-    }
-
-    // Step 3: Get results
-    const results = await olyptik.getCrawlResults(crawl.id, 1, 50);
-    console.log('Total pages scraped:', results.totalResults);
-    
-    return results;
-  } catch (error) {
-    console.error('Error:', error);
-  }
 }
 ```
 
@@ -252,5 +207,3 @@ async function scrapeWebsite() {
 
 
 - Contact our [support team](mailto:support@olyptik.io) for assistance
-- Join our [Discord community](https://discord.gg/olyptik) for discussions
-- Check our [FAQ](/essentials/faq) for common questions
