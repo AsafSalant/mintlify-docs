@@ -39,7 +39,8 @@ const crawl = await client.runCrawl({
   maxResults: 100,
   useSitemap: false,
   timeout: 60,
-  includeLinks: false
+  includeLinks: true,
+  engineType: "auto"
 });
 ```
 

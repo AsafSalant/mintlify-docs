@@ -353,16 +353,37 @@
             "type": "integer",
             "minimum": 1,
             "maximum": 50,
-            "description": "Maximum depth of pages to crawl"
+            "description": "Maximum depth of pages to crawl",
+            "default": 3
           },
           "useSitemap": {
             "type": "boolean",
             "description": "Whether to use sitemap.xml to crawl the website",
-            "example": false
+            "example": false,
+            "default": false
           },
           "includeLinks": {
             "type": "boolean",
-            "description": "Whether to include external links in the crawl"
+            "description": "Whether to include links in the crawl results' markdown",
+            "default": true,
+            "example": true
+          },
+          "engineType": {
+            "type": "string",
+            "description": "The engine to use for the crawl. Auto: auto detect the best engine (default). Cheerio: fast, great for static websites. Playwright: great for dynamic websites that use JavaScript frameworks. ",
+            "enum": [
+              "auto",
+              "cheerio",
+              "playwright"
+            ],
+            "default": "auto",
+            "example": "auto"
+          },
+          "useStaticIps": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether to use static IPs for the crawl. This target website can whitelist the IPs to use for the crawl.",
+            "example": false
           },
           "timeout": {
             "type": "integer",

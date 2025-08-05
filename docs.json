@@ -68,7 +68,6 @@
             "pages": [
               "api-reference/endpoint/crawls/get-crawl",
               "api-reference/endpoint/crawls/create",
-              "api-reference/endpoint/crawls/crawl-status-change",
               "api-reference/endpoint/crawls/abort"
             ]
           },
