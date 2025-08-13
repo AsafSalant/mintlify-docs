@@ -37,6 +37,22 @@ const crawl = await olyptik.createCrawl({
 console.log('Crawl created:', crawl.id);
 ```
 
+```python python
+# pip install olyptik
+from olyptik import Olyptik
+
+# Initialize with API key
+client = Olyptik(api_key="your_api_key_here")
+
+# Start a crawl
+crawl = client.run_crawl({
+    "startUrl": "https://example.com",
+    "maxResults": 50
+})
+
+print(f"Crawl started with ID: {crawl.id}")
+```
+
 ```bash curl
 curl -X POST https://api.olyptik.io/v1/crawls \
   -H "Authorization: Bearer your-api-key" \
@@ -56,10 +72,11 @@ The response will include a `crawl` object that you'll use to track and retrieve
   "id": "crawl_123",
   "status": "running",
   "startUrls": ["https://example.com"],
-  "maxDepth": 5,
   "maxResults": 50,
+  "maxDepth": 5,
   "numberOfResults": 0,
   "includeLinks": true,
+  "useStaticIps": false,
   "origin": "api",
   "timeout": 60,
   "durationInSeconds": 0,
@@ -96,6 +113,7 @@ You can enable either option or both simultaneously.
       "startUrls": ["https://example.com"],
       "numberOfResults": 19,
       "useSitemap": false,
+      "useStaticIps" false,
       "maxDepth": 5,
       "maxResults": 20,
       "includeLinks": false,
@@ -138,6 +156,10 @@ If you haven't configured webhook notifications, you can poll the crawl status:
 const crawl = await olyptik.getCrawl(crawlId);
 ```
 
+```python python
+crawl = olyptik.get_crawl(crawlId);
+```
+
 ```bash curl
 curl https://api.olyptik.io/v1/crawls/{crawl_id} \
   -H "Authorization: Bearer your-api-key"
@@ -155,6 +177,12 @@ const page = 1;
 const itemsInPage = 50;
 const results = await olyptik.getCrawlResults(crawlId, page, itemsInPage);
 console.log(results);
+```
+
+```python python
+page = 1;
+itemsInPage = 50;
+results = olyptik.get_crawl_results(crawlId, page, itemsInPage);
 ```
 
 ```bash curl
@@ -182,16 +210,6 @@ Example response:
       "markdown": "## Awesome website content...",
       "createdAt": "2025-07-11T10:13:26.966Z"
     },
-    {
-      "id": "6870e3c687c81925622df89f",
-      "crawlId": "6870e36787c81925622df818",
-      "brandId": "680e8bc08cdb14f10180db6a",
-      "url": "https://example.com/about",
-      "depthOfUrl": 2,
-      "title": "About Our Company",
-      "markdown": "## About page content...",
-      "createdAt": "2025-07-11T10:13:27.123Z"
-    }
 		...
   ]
 }
@@ -200,8 +218,6 @@ Example response:
 ## Next Steps
 
 - Check out our [API Reference](/api-reference) for detailed endpoint documentation
-- Learn about [Authentication](/essentials/authentication) and security best practices
-- Explore [Advanced Usage](/essentials/advanced-usage) for more complex scenarios
 
 ## Need Help?
 

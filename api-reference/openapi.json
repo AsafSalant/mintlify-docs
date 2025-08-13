@@ -96,6 +96,44 @@
         }
       }
     },
+    "/crawls/query": {
+      "post": {
+        "description": "Query crawls",
+        "requestBody": {
+          "description": "Query crawls",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QueryCrawlsPayload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Crawl response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryCrawlPagination"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/crawls/{id}": {
       "get": {
         "description": "Returns a single crawl based on the ID supplied",
@@ -153,7 +191,41 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Missing page parameter"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/crawls/{id}/crawl-results": {
+        "get": {
+          "description": "Returns all crawl results from the system that the user has access to",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "ID of crawl to return",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Crawl results response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CrawlResultPagination"
+                  }
                 }
               }
             }
@@ -161,23 +233,32 @@
         }
       }
     },
-    "/crawls/{id}/crawl-results": {
-      "get": {
-        "description": "Returns all crawl results from the system that the user has access to",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of crawl to return",
-            "required": true,
-            "schema": {
-              "type": "string"
+    "webhooks": {
+      "/crawls/webhook": {
+        "post": {
+          "description": "Information about a new plant added to the store",
+          "requestBody": {
+            "description": "Plant added to the store",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Crawl"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Return a 200 status to indicate that the data was received successfully"
             }
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "Crawl results response",
+        }
+      },
+      "/crawl-results/created": {
+        "post": {
+          "description": "Information about a new plant added to the store",
+          "requestBody": {
+            "description": "Plant added to the store",
             "content": {
               "application/json": {
                 "schema": {
@@ -185,75 +266,275 @@
                 }
               }
             }
-          }
-        }
-      }
-    }
-  },
-  "webhooks": {
-    "/crawls/webhook": {
-      "post": {
-        "description": "Information about a new plant added to the store",
-        "requestBody": {
-          "description": "Plant added to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/Crawl"
-              }
+          },
+          "responses": {
+            "200": {
+              "description": "Return a 200 status to indicate that the data was received successfully"
             }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
           }
         }
       }
     },
-    "/crawl-results/created": {
-      "post": {
-        "description": "Information about a new plant added to the store",
-        "requestBody": {
-          "description": "Plant added to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CrawlResult"
+    "components": {
+      "schemas": {
+        "Crawl": {
+          "allOf": [
+            {
+              "$ref": "#/components/schemas/StartCrawlPayload"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "Identification number of the crawl",
+                  "type": "string",
+                  "example": "6870e36787c81925622df818"
+                },
+                "createdAt": {
+                  "description": "Timestamp when the crawl was created",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "status": {
+                  "description": "Current status of the crawl",
+                  "type": "string",
+                  "enum": [
+                    "running",
+                    "succeeded",
+                    "failed",
+                    "aborted",
+                    "timed_out",
+                    "error"
+                  ],
+                  "example": "timed_out"
+                },
+                "completedAt": {
+                  "description": "Timestamp when the crawl was completed",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "durationInSeconds": {
+                  "description": "Duration of the crawl in seconds",
+                  "type": "integer",
+                  "minimum": 0,
+                  "example": 1800
+                },
+                "brandId": {
+                  "description": "ID of the brand associated with the crawl",
+                  "type": "string"
+                },
+                "startUrls": {
+                  "description": "Array of URLs to start crawling from",
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "example": [
+                    "https://example.com"
+                  ]
+                },
+                "numberOfResults": {
+                  "description": "Number of results collected",
+                  "type": "integer",
+                  "minimum": 0,
+                  "example": 100
+                },
+                "maxDepth": {
+                  "description": "Maximum depth of pages to crawl",
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 99,
+                  "example": 10
+                },
+                "maxResults": {
+                  "description": "Maximum number of results to collect",
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 110
+                },
+                "origin": {
+                  "description": "Origin of the crawl request",
+                  "type": "string",
+                  "enum": [
+                    "api",
+                    "web"
+                  ],
+                  "example": "web"
+                },
+                "timeout": {
+                  "description": "Timeout duration in seconds",
+                  "type": "integer",
+                  "minimum": 0,
+                  "default": 1800,
+                  "example": 1800
+                },
+                "useStaticIps": {
+                  "description": "Whether to use static IPs for the crawl. This target website can whitelist the IPs to use for the crawl. The static IP will be 154.17.150.0",
+                  "type": "boolean",
+                  "default": false,
+                  "example": false
+                }
               }
+            }
+          ]
+        },
+        "StartCrawlPayload": {
+          "type": "object",
+          "required": [
+            "startUrl",
+            "maxResults"
+          ],
+          "properties": {
+            "startUrl": {
+              "type": "string",
+              "format": "uri",
+              "example": "https://example.com",
+              "description": "URL to start crawling from"
+            },
+            "maxResults": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000,
+              "description": "Maximum number of results to collect"
+            },
+            "maxDepth": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "description": "Maximum depth of pages to crawl",
+              "default": 10
+            },
+            "useSitemap": {
+              "type": "boolean",
+              "description": "Whether to use sitemap.xml to crawl the website",
+              "example": false,
+              "default": false
+            },
+            "includeLinks": {
+              "type": "boolean",
+              "description": "Whether to include links in the crawl results' markdown",
+              "default": true,
+              "example": true
+            },
+            "engineType": {
+              "type": "string",
+              "description": "The engine to use for the crawl. Auto: auto detect the best engine (default). Cheerio: fast, great for static websites. Playwright: great for dynamic websites that use JavaScript frameworks. ",
+              "enum": [
+                "auto",
+                "cheerio",
+                "playwright"
+              ],
+              "default": "auto",
+              "example": "auto"
+            },
+            "useStaticIps": {
+              "type": "boolean",
+              "default": false,
+              "description": "Whether to use static IPs for the crawl. This target website can whitelist the IPs to use for the crawl. The static IP will be 154.17.150.0",
+              "example": false
+            },
+            "timeout": {
+              "type": "integer",
+              "minimum": 60,
+              "description": "Timeout duration in minutes",
+              "example": 60
             }
           }
         },
-        "responses": {
-          "200": {
-            "description": "Return a 200 status to indicate that the data was received successfully"
+        "CrawlResult": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Unique identifier for the crawl result",
+              "example": "cr_123456789"
+            },
+            "crawlId": {
+              "type": "string",
+              "description": "ID of the crawl that generated this result",
+              "example": "c_987654321"
+            },
+            "brandId": {
+              "type": "string",
+              "description": "ID of the brand associated with the crawl result",
+              "example": "b_123456789"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri",
+              "description": "URL of the crawled page",
+              "example": "https://example.com/products/smartphone"
+            },
+            "title": {
+              "type": "string",
+              "description": "Content extracted from the crawled page",
+              "example": "Latest Smartphone Model - Features include 6.5\" display, 256GB storage, and 48MP camera. Available in Black and Silver."
+            },
+            "markdown": {
+              "type": "string",
+              "description": "Markdown content extracted from the crawled page",
+              "example": "## Latest Smartphone Model\n\nFeatures include 6.5\" display, 256GB storage, and 48MP camera. Available in Black and Silver."
+            },
+            "depthOfUrl": {
+              "type": "integer",
+              "description": "Depth of the URL in the crawl",
+              "example": 2
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Timestamp when the result was created",
+              "example": "2024-03-20T15:30:45Z"
+            }
           }
-        }
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "Crawl": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/CreateCrawlDto"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the crawl",
-                "type": "string",
-                "example": "c_123456789"
-              },
-              "createdAt": {
-                "description": "Timestamp when the crawl was created",
-                "type": "string",
-                "format": "date-time"
-              },
-              "status": {
-                "description": "Current status of the crawl",
+        },
+        "CrawlResultPagination": {
+          "type": "object",
+          "properties": {
+            "results": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/CrawlResult"
+              }
+            },
+            "page": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "required": true
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 20,
+              "required": true
+            },
+            "totalPages": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "required": true
+            },
+            "totalResults": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "required": true
+            }
+          }
+        },
+        "QueryCrawlsPayload": {
+          "type": "object",
+          "required": [
+            "page"
+          ],
+          "properties": {
+            "status": {
+              "type": "array",
+              "required": false,
+              "description": "Status of the crawls to query, if left empty all statuses will be queried",
+              "items": {
                 "type": "string",
                 "enum": [
                   "running",
@@ -262,205 +543,84 @@
                   "aborted",
                   "timed_out",
                   "error"
-                ],
-                "example": "timed_out"
-              },
-              "completedAt": {
-                "description": "Timestamp when the crawl was completed",
-                "type": "string",
-                "format": "date-time"
-              },
-              "durationInSeconds": {
-                "description": "Duration of the crawl in seconds",
-                "type": "integer",
-                "minimum": 0,
-                "example": 1800
-              },
-              "brandId": {
-                "description": "ID of the brand associated with the crawl",
-                "type": "string"
-              },
-              "startUrls": {
-                "description": "Array of URLs to start crawling from",
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "format": "uri"
-                },
-                "example": [
-                  "https://example.com"
                 ]
-              },
-              "numberOfResults": {
-                "description": "Number of results collected",
-                "type": "integer",
-                "minimum": 0,
-                "example": 100
-              },
-              "maxDepth": {
-                "description": "Maximum depth of pages to crawl",
-                "type": "integer",
-                "minimum": 1,
-                "maximum": 99,
-                "example": 3
-              },
-              "maxResults": {
-                "description": "Maximum number of results to collect",
-                "type": "integer",
-                "minimum": 1,
-                "maximum": 110
-              },
-              "origin": {
-                "description": "Origin of the crawl request",
-                "type": "string",
-                "enum": [
-                  "api",
-                  "web"
-                ],
-                "example": "web"
-              },
-              "timeout": {
-                "description": "Timeout duration in seconds",
-                "type": "integer",
-                "minimum": 0,
-                "default": 1800,
-                "example": 1800
               }
+            },
+            "startUrls": {
+              "type": "array",
+              "required": false,
+              "description": "Start URLs of the crawls to query, if left empty all start URLs will be queried",
+              "items": {
+                "type": "string",
+                "format": "uri"
+              }
+            },
+            "page": {
+              "type": "integer",
+              "description": "Page number to query",
+              "minimum": 0,
+              "default": 0,
+              "required": true
             }
           }
-        ]
-      },
-      "StartCrawlPayload": {
-        "type": "object",
-        "required": [
-          "startUrl",
-          "maxResults"
-        ],
-        "properties": {
-          "startUrl": {
-            "type": "string",
-            "format": "uri",
-            "example": "https://example.com",
-            "description": "URL to start crawling from"
-          },
-          "maxResults": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 999,
-            "description": "Maximum number of results to collect"
-          },
-          "maxDepth": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 50,
-            "description": "Maximum depth of pages to crawl",
-            "default": 3
-          },
-          "useSitemap": {
-            "type": "boolean",
-            "description": "Whether to use sitemap.xml to crawl the website",
-            "example": false,
-            "default": false
-          },
-          "includeLinks": {
-            "type": "boolean",
-            "description": "Whether to include links in the crawl results' markdown",
-            "default": true,
-            "example": true
-          },
-          "engineType": {
-            "type": "string",
-            "description": "The engine to use for the crawl. Auto: auto detect the best engine (default). Cheerio: fast, great for static websites. Playwright: great for dynamic websites that use JavaScript frameworks. ",
-            "enum": [
-              "auto",
-              "cheerio",
-              "playwright"
-            ],
-            "default": "auto",
-            "example": "auto"
-          },
-          "useStaticIps": {
-            "type": "boolean",
-            "default": false,
-            "description": "Whether to use static IPs for the crawl. This target website can whitelist the IPs to use for the crawl.",
-            "example": false
-          },
-          "timeout": {
-            "type": "integer",
-            "minimum": 60,
-            "description": "Timeout duration in minutes",
-            "example": 60
+        },
+        "QueryCrawlPagination": {
+          "type": "object",
+          "properties": {
+            "page": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "required": true
+            },
+            "results": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Crawl"
+              }
+            },
+            "totalPages": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "required": true
+            },
+            "totalResults": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "required": true
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 20,
+              "required": true
+            }
+          }
+        },
+        "Error": {
+          "required": [
+            "error",
+            "message"
+          ],
+          "type": "object",
+          "properties": {
+            "error": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "message": {
+              "type": "string"
+            }
           }
         }
       },
-      "CrawlResult": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Unique identifier for the crawl result",
-            "example": "cr_123456789"
-          },
-          "crawlId": {
-            "type": "string",
-            "description": "ID of the crawl that generated this result",
-            "example": "c_987654321"
-          },
-          "brandId": {
-            "type": "string",
-            "description": "ID of the brand associated with the crawl result",
-            "example": "b_123456789"
-          },
-          "url": {
-            "type": "string",
-            "format": "uri",
-            "description": "URL of the crawled page",
-            "example": "https://example.com/products/smartphone"
-          },
-          "title": {
-            "type": "string",
-            "description": "Content extracted from the crawled page",
-            "example": "Latest Smartphone Model - Features include 6.5\" display, 256GB storage, and 48MP camera. Available in Black and Silver."
-          },
-          "markdown": {
-            "type": "string",
-            "description": "Markdown content extracted from the crawled page",
-            "example": "## Latest Smartphone Model\n\nFeatures include 6.5\" display, 256GB storage, and 48MP camera. Available in Black and Silver."
-          },
-          "depthOfUrl": {
-            "type": "integer",
-            "description": "Depth of the URL in the crawl",
-            "example": 2
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Timestamp when the result was created",
-            "example": "2024-03-20T15:30:45Z"
-          }
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer"
         }
-      },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
       }
     }
   }

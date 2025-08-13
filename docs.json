@@ -18,17 +18,6 @@
             "pages": [
               "quickstart"
             ]
-          },
-          {
-            "group": "Essentials",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/settings",
-              "essentials/navigation",
-              "essentials/reusable-snippets"
-            ]
           }
         ]
       },
@@ -36,20 +25,16 @@
         "tab": "SDKs",
         "groups": [
           {
-            "group": "Get Started",
+            "group": "Overview",
             "pages": [
-              "sdks/quickstart"
+              "sdks/overview"
             ]
           },
           {
-            "group": "Essentials",
+            "group": "Quickstarts",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/settings",
-              "essentials/navigation",
-              "essentials/reusable-snippets"
+              "sdks/nodejs",
+              "sdks/python"
             ]
           }
         ]
@@ -68,7 +53,8 @@
             "pages": [
               "api-reference/endpoint/crawls/get-crawl",
               "api-reference/endpoint/crawls/create",
-              "api-reference/endpoint/crawls/abort"
+              "api-reference/endpoint/crawls/abort",
+              "api-reference/endpoint/crawls/query-crawls"
             ]
           },
           {
@@ -83,18 +69,13 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
+          "anchor": "App",
+          "href": "https://app.olyptik.io",
+          "icon": "grid"
         },
         {
-          "anchor": "Community",
-          "href": "https://mintlify.com/community",
-          "icon": "slack"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
+          "anchor": "Changelog",
+          "href": "https://olyptik.io/changelog",
           "icon": "newspaper"
         }
       ]

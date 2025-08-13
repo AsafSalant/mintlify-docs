@@ -1,28 +1,38 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: 'API Introduction'
+description: 'Get started with Olyptiks web crawling API'
 ---
 
-## Welcome
+## Welcome to Olyptik API
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+Olyptik provides a powerful web crawling API that allows you to extract structured data from websites at scale. Our API enables you to crawl websites, extract content as markdown, and retrieve results programmatically.
 
 <Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
+  title="API Endpoints"
+  icon="spider"
+  href="/api-reference/endpoint/crawls"
 >
-  View the OpenAPI specification file
+  Explore our web crawling endpoints
 </Card>
+
+## Key Features
+
+- **Intelligent Crawling**: Automatically discover and crawl web pages with configurable depth and limits
+- **Content Extraction**: Extract clean, structured content as markdown from web pages
+- **Real-time Status**: Monitor crawl progress and status in real-time
+- **Flexible Configuration**: Control crawling behavior with various options like sitemaps, timeouts, and engine types
+- **Result Management**: Retrieve and manage crawl results with pagination support
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+All API endpoints require authentication using Bearer tokens. Include your API key in the Authorization header:
 
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+```bash
+curl -X GET "https://api.olyptik.io/crawls" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json"
 ```
+
+<Warning>
+Keep your API key secure and never expose it in client-side code. Generate and manage your API keys from the Olyptik dashboard.
+</Warning>
