@@ -297,32 +297,6 @@ async with AsyncOlyptik(api_key="your_api_key") as client:
 client = Olyptik(api_key="your_api_key")  # In async function
 ```
 
-### 2. Handle Errors Gracefully
-
-```python
-# ✅ Good: Comprehensive error handling
-try:
-    crawl = client.run_crawl(payload)
-except ApiError as e:
-    if e.status_code == 429:
-        # Handle rate limiting
-        time.sleep(60)
-        crawl = client.run_crawl(payload)
-    else:
-        raise
-```
-
-### 3. Use Environment Variables
-
-```python
-# ✅ Good: Use environment variables for API keys
-from olyptik import Olyptik
-client = Olyptik()  # Reads from environment
-
-# ❌ Avoid: Hardcoding API keys
-client = Olyptik(api_key="hardcoded_key")
-```
-
 ### 4. Choose the Right Engine
 
 ```python
@@ -375,6 +349,4 @@ except ApiError as e:
 ## Support
 
 - 📧 Email: support@olyptik.io
-- 🐛 Issues: [GitHub Issues](https://github.com/olyptik/olyptik/issues)
 - 📚 API Reference: [API Documentation](/api-reference/introduction)
-- 🌐 Website: [https://www.olyptik.io](https://www.olyptik.io)
