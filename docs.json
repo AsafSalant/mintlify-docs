@@ -4,8 +4,8 @@
   "name": "Olyptik Docs",
   "colors": {
     "primary": "#3333ff",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "light": "#a5b4fc",
+    "dark": "#4f46e5"
   },
   "favicon": "/favicon.svg",
   "navigation": {
