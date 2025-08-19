@@ -54,7 +54,7 @@ print(f"Crawl started with ID: {crawl.id}")
 ```
 
 ```bash curl
-curl -X POST https://api.olyptik.io/v1/crawls \
+curl -X POST https://api.olyptik.io/crawls \
   -H "Authorization: Bearer your-api-key" \
   -H "Content-Type: application/json" \
   -d '{
@@ -161,7 +161,7 @@ crawl = olyptik.get_crawl(crawlId);
 ```
 
 ```bash curl
-curl https://api.olyptik.io/v1/crawls/{crawl_id} \
+curl https://api.olyptik.io/crawls/{crawl_id} \
   -H "Authorization: Bearer your-api-key"
 ```
 
@@ -186,7 +186,7 @@ results = olyptik.get_crawl_results(crawlId, page, itemsInPage);
 ```
 
 ```bash curl
-curl https://api.olyptik.io/v1/crawls/{crawl_id}/results?page=1&limit=50 \
+curl https://api.olyptik.io/crawls/{crawl_id}/results?page=1&limit=50 \
   -H "Authorization: Bearer your-api-key"
 ```
 
