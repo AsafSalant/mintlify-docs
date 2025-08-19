@@ -1,71 +1,61 @@
 ---
 title: Introduction
-description: "Welcome to the home of your new documentation"
+description: "Olyptik is a web crawler for AI pipelines — extract clean, structured content fast."
 ---
 
-<img
-  className="block dark:hidden"
-  src="/images/hero-light.png"
-  alt="Hero Light"
-/>
-<img
-  className="hidden dark:block"
-  src="/images/hero-dark.png"
-  alt="Hero Dark"
-/>
+## Welcome to Olyptik
 
-## Setting up
+Olyptik helps developers collect high‑quality web data for AI and data pipelines. Start crawls in seconds, extract clean Markdown, monitor progress in real time, and fetch results programmatically via our API and SDKs.
 
-The first step to world-class documentation is setting up your editing environments.
-
-<CardGroup cols={2}>
-  <Card
-    title="Edit Your Docs"
-    icon="pen-to-square"
-    href="https://mintlify.com/docs/quickstart"
-  >
-    Get your docs set up locally for easy development
+<CardGroup cols={3}>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Get up and running in minutes with copy‑paste examples
   </Card>
-  <Card
-    title="Preview Changes"
-    icon="image"
-    href="https://mintlify.com/docs/development"
-  >
-    Preview your changes before you push to make sure they're perfect
+  <Card title="SDKs" icon="brackets-curly" href="/sdks/overview">
+    Use our official Node.js and Python SDKs
+  </Card>
+  <Card title="API Reference" icon="code" href="/api-reference">
+    Explore endpoints, parameters, and responses
   </Card>
 </CardGroup>
 
-## Make it yours
+## What you can do
 
-Update your docs to your brand and add valuable content for the best user conversion.
+- **Run crawls at scale**: Control depth, limits, timeouts, and discovery behavior
+- **Extract clean content**: Get normalized Markdown for downstream LLM/RAG indexing
+- **Monitor in real time**: Track status via polling or webhooks
+- **Use SDKs or REST**: First‑class support for Node.js and Python
+
+## Common workflows
 
 <CardGroup cols={2}>
-  <Card
-    title="Customize Style"
-    icon="palette"
-    href="https://mintlify.com/docs/settings/global"
-  >
-    Customize your docs to your company's colors and brands
+  <Card title="Create a crawl" icon="spider" href="/api-reference/endpoint/crawls/create">
+    Start a crawl by providing a `startUrl` and limits
   </Card>
-  <Card
-    title="Reference APIs"
-    icon="code"
-    href="https://mintlify.com/docs/api-playground/openapi"
-  >
-    Automatically generate endpoints from an OpenAPI spec
+  <Card title="Check status" icon="clock" href="/api-reference/endpoint/crawls/get-crawl">
+    Retrieve crawl status and details
   </Card>
-  <Card
-    title="Add Components"
-    icon="screwdriver-wrench"
-    href="https://mintlify.com/docs/content/components/accordions"
-  >
-    Build interactive features and designs to guide your users
+  <Card title="Fetch results" icon="download" href="/api-reference/endpoint/crawl-results/get-crawl-results">
+    Paginate through extracted pages as Markdown
   </Card>
-  <Card
-    title="Get Inspiration"
-    icon="stars"
-    href="https://mintlify.com/customers"
-  >
-    Check out our showcase of our favorite documentation
+  <Card title="Webhooks" icon="bolt" href="/api-reference/endpoint/webhook">
+    Receive push notifications for status changes and new results
   </Card>
 </CardGroup>
+
+## Try it free
+
+Start with the Free tier — crawl up to 500 pages, no credit card required. Manage API keys and webhooks in the dashboard.
+
+<CardGroup cols={2}>
+  <Card title="Open the App" icon="grid" href="https://app.olyptik.io">
+    Create an API key and run your first crawl
+  </Card>
+  <Card title="Changelog" icon="newspaper" href="https://olyptik.io/changelog">
+    See what's new and improved
+  </Card>
+</CardGroup>
+
+## Need help?
+
+Questions or feedback? Reach us at [support@olyptik.io](mailto:support@olyptik.io).
