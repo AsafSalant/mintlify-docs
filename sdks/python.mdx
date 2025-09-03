@@ -119,7 +119,7 @@ async def main():
             "includeLinks": True,
             "timeout": 60,
             "useSitemap": False,
-            "entireWebsite: False,
+            "entireWebsite": False,
             "excludeNonMainTags": True,
             "useStaticIps": False
         })
@@ -191,6 +191,8 @@ The run crawl payload:
 | maxDepth | number | ❌ | 10 | Maximum depth of pages to crawl (1-100) |
 | includeLinks | boolean | ❌ | true | Whether to include links in the crawl results' markdown |
 | useSitemap | boolean | ❌ | false | Whether to use sitemap.xml to crawl the website |
+| entireWebsite | boolean | ❌ | false | Whether to crawl the entire website |
+| excludeNonMainTags | boolean | ❌ | true | Whether to exclude non-main tags from the crawl results' markdown |
 | timeout | number | ❌ | 60 | Timeout duration in minutes |
 | engineType | string | ❌ | "auto" | The engine to use: "auto", "cheerio" (fast, static sites), "playwright" (dynamic sites) |
 | useStaticIps | boolean | ❌ | false | Whether to use static IPs for the crawl |
@@ -285,6 +287,7 @@ class Crawl:
     numberOfResults: int       # Number of results found
     useSitemap: bool           # Whether sitemap was used
     entireWebsite: bool        # Whether to use both sitemap and all found links
+    excludeNonMainTags: bool   # Whether non-main tags are excluded from the crawl results' markdown
     timeout: int              # Timeout setting
 ```
 

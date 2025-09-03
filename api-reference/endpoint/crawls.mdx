@@ -20,7 +20,9 @@ Creates a new crawl job using the API key authentication.
   "maxDepth": 5,
   "maxResults": 50,
   "useSitemap": false,
-  "includeLinks": false,
+  "entireWebsite": false,
+  "excludeNonMainTags": true,
+  "includeLinks": false
 }
 ```
 
@@ -78,6 +80,8 @@ export enum EngineType {
 | engine | string | No | Crawling engine to use | Must be either 'playwright' or 'cheerio' |
 | maxDepth | number | Yes | Maximum depth of pages to crawl | Between 1-50 |
 | maxResults | number | Yes | Maximum number of results to collect | Between 1-999 |
+| entireWebsite | boolean | No | Whether to crawl the entire website | Default: false |
+| excludeNonMainTags | boolean | No | Whether to exclude non-main tags from the crawl results' markdown | Default: true |
 | stack | string | No | Technology stack to target (e.g. react) | Must be a valid StackType |
 | includeOnlyPaths | string[] | No | Array of paths to include in the crawl | - |
 | excludePaths | string[] | No | Array of paths to exclude from the crawl | - |
