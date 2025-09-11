@@ -403,8 +403,7 @@
       "StartCrawlPayload": {
         "type": "object",
         "required": [
-          "startUrl",
-          "maxResults"
+          "startUrl"
         ],
         "properties": {
           "startUrl": {
