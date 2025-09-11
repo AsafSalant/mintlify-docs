@@ -62,7 +62,7 @@
       "post": {
         "description": "Initiates a new crawl",
         "requestBody": {
-          "description": "Crawl to initiate",
+          "description": "maxResults and maxDepth will be ignored if useSitemap or entireWebsite is true",
           "content": {
             "application/json": {
               "schema": {
@@ -427,13 +427,13 @@
           },
           "useSitemap": {
             "type": "boolean",
-            "description": "Whether to use sitemap.xml to crawl the website",
+            "description": "Whether to use sitemap.xml to crawl the website. If true - maxResults and maxDepth will be ignored.",
             "example": false,
             "default": false
           },
           "entireWebsite": {
             "type": "boolean",
-            "description": "Whether to crawl the entire website",
+            "description": "Whether to crawl the entire website. If true - maxResults and maxDepth will be ignored.",
             "example": false,
             "default": false
           },
