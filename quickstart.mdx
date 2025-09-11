@@ -29,13 +29,14 @@ import Olyptik from "olyptik";
 
 const olyptik = new Olyptik({ apiKey: 'your-api-key' });
 
-const crawl = await olyptik.createCrawl({
+const crawl = await olyptik.runCrawl({
   startUrl: 'https://example.com',
   maxResults: 50
 });
   
 console.log('Crawl created:', crawl.id);
 ```
+
 
 ```python python
 # pip install olyptik
@@ -52,6 +53,7 @@ crawl = client.run_crawl({
 
 print(f"Crawl started with ID: {crawl.id}")
 ```
+
 
 ```bash curl
 curl -X POST https://api.olyptik.io/crawls \
@@ -102,6 +104,7 @@ Configure a webhook URL in your [settings page](https://app.olyptik.io/settings/
 You can enable either option or both simultaneously.
 
 <CodeGroup>
+
 ```json Crawl status change event
 {
   "secret": "u9dv22c5",
@@ -130,6 +133,8 @@ You can enable either option or both simultaneously.
   }
 }
 ```
+
+
 ```json Crawl result created event
 {
   "secret": "u9dv22c5",
@@ -149,9 +154,11 @@ You can enable either option or both simultaneously.
   }
 }
 ```
+
 </CodeGroup>
 
 #### Option 2: Polling
+
 If you haven't configured webhook notifications, you can poll the crawl status:
 
 <CodeGroup>
@@ -160,9 +167,11 @@ If you haven't configured webhook notifications, you can poll the crawl status:
 const crawl = await olyptik.getCrawl(crawlId);
 ```
 
+
 ```python python
 crawl = olyptik.get_crawl(crawlId);
 ```
+
 
 ```bash curl
 curl https://api.olyptik.io/crawls/{crawl_id} \
@@ -170,6 +179,7 @@ curl https://api.olyptik.io/crawls/{crawl_id} \
 ```
 
 </CodeGroup>
+
 ### Step 3: Get Crawl Results
 
 Once the crawl is complete, retrieve the results:
@@ -183,11 +193,13 @@ const results = await olyptik.getCrawlResults(crawlId, page, itemsInPage);
 console.log(results);
 ```
 
+
 ```python python
 page = 1;
 itemsInPage = 50;
 results = olyptik.get_crawl_results(crawlId, page, itemsInPage);
 ```
+
 
 ```bash curl
 curl https://api.olyptik.io/crawls/{crawl_id}/results?page=1&limit=50 \
@@ -197,6 +209,7 @@ curl https://api.olyptik.io/crawls/{crawl_id}/results?page=1&limit=50 \
 </CodeGroup>
 
 Example response:
+
 ```json
 {
   "page": 1,
@@ -224,6 +237,5 @@ Example response:
 - Check out our [API Reference](/api-reference) for detailed endpoint documentation
 
 ## Need Help?
-
 
 - Contact our [support team](mailto:support@olyptik.io) for assistance
