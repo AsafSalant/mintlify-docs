@@ -1,6 +1,6 @@
 ---
-title: 'Node.js SDK'
-description: 'Get started with the Olyptik Node.js/TypeScript SDK for web crawling and content extraction'
+title: "Node.js SDK"
+description: "Get started with the Olyptik Node.js/TypeScript SDK for web crawling and content extraction"
 ---
 
 ## Installation
@@ -37,6 +37,7 @@ const crawl = await client.runCrawl({
 });
 ```
 
+
 ```typescript Full Example
 const crawl = await client.runCrawl({
   startUrl: 'https://example.com',
@@ -55,31 +56,33 @@ const crawl = await client.runCrawl({
 </CodeGroup>
 
 ### Get crawl
+
 Retrieve a crawl - the response will be a [crawl object]("https://localhost:3000/sdks/nodejs#crawl-object")
 
 ```typescript
-const crawl = await client.getCrawl(crawl.crawlId);
+const crawl = await client.getCrawl(crawl.id);
 ```
 
 ### Query crawls
 
 ```typescript
-const result = await client.queryCrawls(crawl.crawlId);
+const result = await client.queryCrawls(crawl.id);
 
 console.log("Count of results", result.)
 ```
 
 ### Getting Crawl Results
+
 Retrieve the results of your crawl using the crawl ID:
 
 ```typescript
-const results = await client.getCrawlResults(crawl.crawlId, 0, 50);
+const results = await client.getCrawlResults(crawl.id, 0, 50);
 ```
 
 The results are paginated, and you can specify the page number and limit per page.
 
+### Abort a crawl
 
-### Abort a crawl 
 ```typescript
 const abortedCrawl = await client.abortCrawl(crawl.id);
 ```
@@ -87,56 +90,55 @@ const abortedCrawl = await client.abortCrawl(crawl.id);
 ## Objects
 
 ### RunCrawlPayload
-| Property | Type | Required | Default | Description |
-|--------|------|----------|---------|-------------|
-| startUrl | string | ✅ | - | The URL to start crawling from |
-| maxResults | number | ✅ | - | Maximum number of results to collect (1-10,000) |
-| maxDepth | number | ❌ | 10 | Maximum depth of pages to crawl (1-100) |
-| includeLinks | boolean | ❌ | true | Whether to include links in the crawl results' markdown |
-| useSitemap | boolean | ❌ | false | Whether to use sitemap.xml to crawl the website |
-| entireWebsite | boolean | ❌ | false | Whether to crawl the entire website |
-| excludeNonMainTags | boolean | ❌ | true | Whether to exclude non-main tags from the crawl results' markdown |
-| timeout | number | ❌ | 60 | Timeout duration in minutes |
-| engineType | string | ❌ | "auto" | The engine to use: "auto", "cheerio" (fast, static sites), "playwright" (dynamic sites) |
-| useStaticIps | boolean | ❌ | false | Whether to use static IPs for the crawl |
+
+| Property           | Type    | Required | Default | Description                                                                             |
+| ------------------ | ------- | -------- | ------- | --------------------------------------------------------------------------------------- |
+| startUrl           | string  | ✅        | -       | The URL to start crawling from                                                          |
+| maxResults         | number  | ✅        | -       | Maximum number of results to collect (1-10,000)                                         |
+| maxDepth           | number  | ❌        | 10      | Maximum depth of pages to crawl (1-100)                                                 |
+| includeLinks       | boolean | ❌        | true    | Whether to include links in the crawl results' markdown                                 |
+| useSitemap         | boolean | ❌        | false   | Whether to use sitemap.xml to crawl the website                                         |
+| entireWebsite      | boolean | ❌        | false   | Whether to crawl the entire website                                                     |
+| excludeNonMainTags | boolean | ❌        | true    | Whether to exclude non-main tags from the crawl results' markdown                       |
+| timeout            | number  | ❌        | 60      | Timeout duration in minutes                                                             |
+| engineType         | string  | ❌        | "auto"  | The engine to use: "auto", "cheerio" (fast, static sites), "playwright" (dynamic sites) |
+| useStaticIps       | boolean | ❌        | false   | Whether to use static IPs for the crawl                                                 |
 
 ### Crawl
 
-| Property | Type | Description |
-|-------|------|-------------|
-| id | string | Unique crawl identifier |
-| status | string | Current status ("RUNNING", "SUCCEEDED", "FAILED", "TIMED_OUT", "ABORTED", "ERROR") |
-| startUrls | string[] | Starting URLs |
-| includeLinks | boolean | Whether links are included |
-| maxDepth | number | Maximum crawl depth |
-| maxResults | number | Maximum number of results |
-| brandId | string | Brand identifier |
-| createdAt | string | Creation timestamp |
-| completedAt | string \| null | Completion timestamp |
-| durationInSeconds | number | Total duration |
-| numberOfResults | number | Number of results found |
-| useSitemap | boolean | Whether sitemap was used |
-| entireWebsite | boolean | Whether to crawl the entire website |
-| excludeNonMainTags | boolean | Whether non-main tags are excluded from the crawl results' markdown |
-| timeout | number | The timeout of the crawl in minutes |
+| Property           | Type           | Description                                                                        |
+| ------------------ | -------------- | ---------------------------------------------------------------------------------- |
+| id                 | string         | Unique crawl identifier                                                            |
+| status             | string         | Current status ("RUNNING", "SUCCEEDED", "FAILED", "TIMED_OUT", "ABORTED", "ERROR") |
+| startUrls          | string[]       | Starting URLs                                                                      |
+| includeLinks       | boolean        | Whether links are included                                                         |
+| maxDepth           | number         | Maximum crawl depth                                                                |
+| maxResults         | number         | Maximum number of results                                                          |
+| brandId            | string         | Brand identifier                                                                   |
+| createdAt          | string         | Creation timestamp                                                                 |
+| completedAt        | string \| null | Completion timestamp                                                               |
+| durationInSeconds  | number         | Total duration                                                                     |
+| numberOfResults    | number         | Number of results found                                                            |
+| useSitemap         | boolean        | Whether sitemap was used                                                           |
+| entireWebsite      | boolean        | Whether to crawl the entire website                                                |
+| excludeNonMainTags | boolean        | Whether non-main tags are excluded from the crawl results' markdown                |
+| timeout            | number         | The timeout of the crawl in minutes                                                |
 
 ### CrawlResult
 
 Each crawl result includes:
 
-| Property | Type | Description |
-|-------|------|-------------|
-| id | string | Unique identifier for the page result |
-| crawlId | string | Unique identifier for the crawl |
-| url | string | The crawled URL |
-| title | string | Page title extracted from the HTML |
-| markdown | string | Extracted content in markdown format |
-| depthOfUrl | number | How deep this URL was in the crawl (0 = start URL) |
-| isSuccess | boolean | Whether the crawl was successful |
-| error | string | Error message if the crawl failed |
-| createdAt | string | ISO timestamp when the result was created |
-
-
+| Property   | Type    | Description                                        |
+| ---------- | ------- | -------------------------------------------------- |
+| id         | string  | Unique identifier for the page result              |
+| crawlId    | string  | Unique identifier for the crawl                    |
+| url        | string  | The crawled URL                                    |
+| title      | string  | Page title extracted from the HTML                 |
+| markdown   | string  | Extracted content in markdown format               |
+| depthOfUrl | number  | How deep this URL was in the crawl (0 = start URL) |
+| isSuccess  | boolean | Whether the crawl was successful                   |
+| error      | string  | Error message if the crawl failed                  |
+| createdAt  | string  | ISO timestamp when the result was created          |
 
 ## Error Handling
 
@@ -154,6 +156,7 @@ try {
   console.error('Crawl failed:', error.message);
 }
 ```
+
 
 ```typescript Detailed Error Handling
 try {
@@ -177,22 +180,13 @@ try {
 
 </CodeGroup>
 
-
 ## Next Steps
 
 <CardGroup cols={2}>
-  <Card
-    title="API Reference"
-    icon="code"
-    href="/api-reference/introduction"
-  >
+  <Card title="API Reference" icon="code" href="/api-reference/introduction">
     Explore all available endpoints and methods
   </Card>
-  <Card
-    title="Python SDK"
-    icon="python"
-    href="/sdks/python"
-  >
+  <Card title="Python SDK" icon="python" href="/sdks/python">
     Get started with our Python SDK
   </Card>
-</CardGroup> 
+</CardGroup>
