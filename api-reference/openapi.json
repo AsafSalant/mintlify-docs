@@ -480,17 +480,17 @@
           "id": {
             "type": "string",
             "description": "Unique identifier for the crawl result",
-            "example": "cr_123456789"
+            "example": "3450e36787c81925622df494"
           },
           "crawlId": {
             "type": "string",
             "description": "ID of the crawl that generated this result",
-            "example": "c_987654321"
+            "example": "6450e36787c81925622df492"
           },
-          "brandId": {
+          "teamId": {
             "type": "string",
-            "description": "ID of the brand associated with the crawl result",
-            "example": "b_123456789"
+            "description": "ID of the team associated with the crawl result",
+            "example": "6450e36787c81925622df494"
           },
           "url": {
             "type": "string",
