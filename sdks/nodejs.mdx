@@ -92,18 +92,18 @@ const abortedCrawl = await client.abortCrawl(crawl.id);
 
 ### RunCrawlPayload
 
-| Property           | Type    | Required | Default | Description                                                                             |
-| ------------------ | ------- | -------- | ------- | --------------------------------------------------------------------------------------- |
-| startUrl           | string  | ✅        | -       | The URL to start crawling from                                                          |
-| maxResults         | number  | ✅        | -       | Maximum number of results to collect (1-10,000)                                         |
-| maxDepth           | number  | ❌        | 10      | Maximum depth of pages to crawl (1-100)                                                 |
-| includeLinks       | boolean | ❌        | true    | Whether to include links in the crawl results' markdown                                 |
-| useSitemap         | boolean | ❌        | false   | Whether to use sitemap.xml to crawl the website                                         |
-| entireWebsite      | boolean | ❌        | false   | Whether to crawl the entire website                                                     |
-| excludeNonMainTags | boolean | ❌        | true    | Whether to exclude non-main tags from the crawl results' markdown                       |
-| timeout            | number  | ❌        | 60      | Timeout duration in minutes                                                             |
-| engineType         | string  | ❌        | "auto"  | The engine to use: "auto", "cheerio" (fast, static sites), "playwright" (dynamic sites) |
-| useStaticIps       | boolean | ❌        | false   | Whether to use static IPs for the crawl                                                 |
+| Property           | Type    | Required                                                                               | Default | Description                                                                             |
+| ------------------ | ------- | -------------------------------------------------------------------------------------- | ------- | --------------------------------------------------------------------------------------- |
+| startUrl           | string  | ✅                                                                                      | -       | The URL to start crawling from                                                          |
+| maxResults         | number  | ❌ (conditional - either "maxResults"/"useSitemap" or "entireWebsite" must be provided) | -       | Maximum number of results to collect (1-10,000)                                         |
+| useSitemap         | boolean | ❌ (conditional - either "maxResults"/"useSitemap" or "entireWebsite" must be provided) | false   | Whether to use sitemap.xml to crawl the website                                         |
+| entireWebsite      | boolean | ❌ (conditional - either "maxResults"/"useSitemap" or "entireWebsite" must be provided) | false   | Whether to crawl the entire website                                                     |
+| maxDepth           | number  | ❌                                                                                      | 10      | Maximum depth of pages to crawl (1-100)                                                 |
+| includeLinks       | boolean | ❌                                                                                      | true    | Whether to include links in the crawl results' markdown                                 |
+| excludeNonMainTags | boolean | ❌                                                                                      | true    | Whether to exclude non-main tags from the crawl results' markdown                       |
+| timeout            | number  | ❌                                                                                      | 60      | Timeout duration in minutes                                                             |
+| engineType         | string  | ❌                                                                                      | "auto"  | The engine to use: "auto", "cheerio" (fast, static sites), "playwright" (dynamic sites) |
+| useStaticIps       | boolean | ❌                                                                                      | false   | Whether to use static IPs for the crawl                                                 |
 
 ### Crawl
 
