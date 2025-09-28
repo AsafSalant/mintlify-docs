@@ -66,9 +66,10 @@ const crawl = await client.getCrawl(crawl.id);
 ### Query crawls
 
 ```typescript
-const result = await client.queryCrawls(crawl.id);
-
-console.log("Count of results", result.)
+const result = await client.queryCrawls({
+	status: "succeeded",
+	page: 0
+});
 ```
 
 ### Getting Crawl Results
@@ -109,7 +110,7 @@ const abortedCrawl = await client.abortCrawl(crawl.id);
 | Property           | Type           | Description                                                                        |
 | ------------------ | -------------- | ---------------------------------------------------------------------------------- |
 | id                 | string         | Unique crawl identifier                                                            |
-| status             | string         | Current status ("RUNNING", "SUCCEEDED", "FAILED", "TIMED_OUT", "ABORTED", "ERROR") |
+| status             | string         | Current status ("running", "succeeded", "failed", "timed_out", "aborted", "error") |
 | startUrls          | string[]       | Starting URLs                                                                      |
 | includeLinks       | boolean        | Whether links are included                                                         |
 | maxDepth           | number         | Maximum crawl depth                                                                |
