@@ -1,11 +1,7 @@
 ---
 title: "Python SDK"
-description: "Get started with the Olyptik Python SDK for web crawling and content extraction"
+description: "The Olyptik Python SDK provides a simple and intuitive interface for web crawling and content extraction. It supports both synchronous and asynchronous programming patterns with full type hints."
 ---
-
-# Python SDK
-
-The Olyptik Python SDK provides a simple and intuitive interface for web crawling and content extraction. It supports both synchronous and asynchronous programming patterns with full type hints.
 
 ## Installation
 
@@ -23,7 +19,7 @@ First, you'll need to initialize the SDK with your API key - you can get it from
 from olyptik import Olyptik
 
 # Initialize with API key
-client = Olyptik(api_key="your_api_key_here")
+client = Olyptik(api_key="your_api_key")
 ```
 
 ## Synchronous Usage
@@ -205,7 +201,7 @@ The run crawl payload:
 | maxResults         | number  | ❌ (conditional - either "maxResults"/"useSitemap" or "entireWebsite" must be provided) | -       | Maximum number of results to collect (1-10,000)                                         |
 | useSitemap         | boolean | ❌ (conditional - either "maxResults"/"useSitemap" or "entireWebsite" must be provided) | false   | Whether to use sitemap.xml to crawl the website                                         |
 | entireWebsite      | boolean | ❌ (conditional - either "maxResults"/"useSitemap" or "entireWebsite" must be provided) | false   | Whether to crawl the entire website                                                     |
-| maxDepth           | number  | ❌ (conditional - must be provided with "maxResults")                                   | 10      | Maximum depth of pages to crawl (1-100)                                                 |
+| maxDepth           | number  | ❌                                                                                      | 10      | Maximum depth of pages to crawl (1-100)                                                 |
 | includeLinks       | boolean | ❌                                                                                      | true    | Whether to include links in the crawl results' markdown                                 |
 | excludeNonMainTags | boolean | ❌                                                                                      | true    | Whether to exclude non-main tags from the crawl results' markdown                       |
 | timeout            | number  | ❌                                                                                      | 60      | Timeout duration in minutes                                                             |
@@ -275,6 +271,7 @@ Each crawl result contains:
 class CrawlResult:
     crawlId: str          # Unique identifier for the crawl
     teamId: str           # Team identifier
+	projectId: str        # Project identifier
     url: str              # The crawled URL
     title: str            # Page title
     markdown: str         # Extracted content in markdown format
@@ -296,6 +293,7 @@ class Crawl:
     maxDepth: int              # Maximum crawl depth
     maxResults: int            # Maximum number of results
     teamId: str                # Team identifier
+	projectId: str        	   # Project identifier
     createdAt: str             # Creation timestamp
     completedAt: Optional[str] # Completion timestamp
     durationInSeconds: int     # Total duration

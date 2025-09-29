@@ -116,6 +116,7 @@ const abortedCrawl = await client.abortCrawl(crawl.id);
 | maxDepth           | number         | Maximum crawl depth                                                                |
 | maxResults         | number         | Maximum number of results                                                          |
 | teamId             | string         | Team identifier                                                                    |
+| projectId          | string         | Project identifier                                                                 |
 | createdAt          | string         | Creation timestamp                                                                 |
 | completedAt        | string \| null | Completion timestamp                                                               |
 | durationInSeconds  | number         | Total duration                                                                     |
@@ -133,6 +134,7 @@ Each crawl result includes:
 | ---------- | ------- | -------------------------------------------------- |
 | id         | string  | Unique identifier for the page result              |
 | crawlId    | string  | Unique identifier for the crawl                    |
+| projectId  | string  | Project identifier                                 |
 | url        | string  | The crawled URL                                    |
 | title      | string  | Page title extracted from the HTML                 |
 | markdown   | string  | Extracted content in markdown format               |
