@@ -47,6 +47,7 @@ const crawl = await client.runCrawl({
   useSitemap: false,
   entireWebsite: false,
   excludeNonMainTags: true,
+  deduplicateContent: true,
   timeout: 60,
   engineType: "auto",
   useStaticIps: false
