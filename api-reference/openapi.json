@@ -449,6 +449,12 @@
             "default": true,
             "example": true
           },
+          "deduplicateContent": {
+            "type": "boolean",
+            "description": "Whether to remove duplicate text fragments that appeared on other pages.",
+            "default": true,
+            "example": true
+          },
           "engineType": {
             "type": "string",
             "description": "The engine to use for the crawl. Auto: auto detect the best engine (default). Cheerio: fast, great for static websites. Playwright: great for dynamic websites that use JavaScript frameworks. ",
