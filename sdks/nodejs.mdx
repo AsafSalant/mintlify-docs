@@ -48,6 +48,7 @@ const crawl = await client.runCrawl({
   entireWebsite: false,
   excludeNonMainTags: true,
   deduplicateContent: true,
+  extraction: "",
   timeout: 60,
   engineType: "auto",
   useStaticIps: false
@@ -103,48 +104,51 @@ const abortedCrawl = await client.abortCrawl(crawl.id);
 | includeLinks       | boolean | ❌                                                                                      | true    | Whether to include links in the crawl results' markdown                                 |
 | excludeNonMainTags | boolean | ❌                                                                                      | true    | Whether to exclude non-main tags from the crawl results' markdown                       |
 | deduplicateContent | boolean | ❌                                                                                      | true    | Whether to remove duplicate text fragments that appeared on other pages                 |
+| extraction         | string  | ❌                                                                                      | ""      | Instructions defining how the AI should extract specific content from the crawl results |
 | timeout            | number  | ❌                                                                                      | 60      | Timeout duration in minutes                                                             |
 | engineType         | string  | ❌                                                                                      | "auto"  | The engine to use: "auto", "cheerio" (fast, static sites), "playwright" (dynamic sites) |
 | useStaticIps       | boolean | ❌                                                                                      | false   | Whether to use static IPs for the crawl                                                 |
 
 ### Crawl
 
-| Property           | Type           | Description                                                                        |
-| ------------------ | -------------- | ---------------------------------------------------------------------------------- |
-| id                 | string         | Unique crawl identifier                                                            |
-| status             | string         | Current status ("running", "succeeded", "failed", "timed_out", "aborted", "error") |
-| startUrls          | string[]       | Starting URLs                                                                      |
-| includeLinks       | boolean        | Whether links are included                                                         |
-| maxDepth           | number         | Maximum crawl depth                                                                |
-| maxResults         | number         | Maximum number of results                                                          |
-| teamId             | string         | Team identifier                                                                    |
-| projectId          | string         | Project identifier                                                                 |
-| createdAt          | string         | Creation timestamp                                                                 |
-| completedAt        | string \| null | Completion timestamp                                                               |
-| durationInSeconds  | number         | Total duration                                                                     |
-| numberOfResults    | number         | Number of results found                                                            |
-| useSitemap         | boolean        | Whether sitemap was used                                                           |
-| entireWebsite      | boolean        | Whether to crawl the entire website                                                |
-| excludeNonMainTags | boolean        | Whether non-main tags are excluded from the crawl results' markdown                |
-| deduplicateContent | boolean        | Whether to remove duplicate text fragments that appeared on other pages.           |
-| timeout            | number         | The timeout of the crawl in minutes                                                |
+| Property           | Type           | Description                                                                             |
+| ------------------ | -------------- | --------------------------------------------------------------------------------------- |
+| id                 | string         | Unique crawl identifier                                                                 |
+| status             | string         | Current status ("running", "succeeded", "failed", "timed_out", "aborted", "error")      |
+| startUrls          | string[]       | Starting URLs                                                                           |
+| includeLinks       | boolean        | Whether links are included                                                              |
+| maxDepth           | number         | Maximum crawl depth                                                                     |
+| maxResults         | number         | Maximum number of results                                                               |
+| teamId             | string         | Team identifier                                                                         |
+| projectId          | string         | Project identifier                                                                      |
+| createdAt          | string         | Creation timestamp                                                                      |
+| completedAt        | string \| null | Completion timestamp                                                                    |
+| durationInSeconds  | number         | Total duration                                                                          |
+| numberOfResults    | number         | Number of results found                                                                 |
+| useSitemap         | boolean        | Whether sitemap was used                                                                |
+| extraction         | string         | Instructions defining how the AI should extract specific content from the crawl results |
+| entireWebsite      | boolean        | Whether to crawl the entire website                                                     |
+| excludeNonMainTags | boolean        | Whether non-main tags are excluded from the crawl results' markdown                     |
+| deduplicateContent | boolean        | Whether to remove duplicate text fragments that appeared on other pages.                |
+| timeout            | number         | The timeout of the crawl in minutes                                                     |
 
 ### CrawlResult
 
 Each crawl result includes:
 
-| Property   | Type    | Description                                        |
-| ---------- | ------- | -------------------------------------------------- |
-| id         | string  | Unique identifier for the page result              |
-| crawlId    | string  | Unique identifier for the crawl                    |
-| projectId  | string  | Project identifier                                 |
-| url        | string  | The crawled URL                                    |
-| title      | string  | Page title extracted from the HTML                 |
-| markdown   | string  | Extracted content in markdown format               |
-| depthOfUrl | number  | How deep this URL was in the crawl (0 = start URL) |
-| isSuccess  | boolean | Whether the crawl was successful                   |
-| error      | string  | Error message if the crawl failed                  |
-| createdAt  | string  | ISO timestamp when the result was created          |
+| Property      | Type    | Description                                        |
+| ------------- | ------- | -------------------------------------------------- |
+| id            | string  | Unique identifier for the page result              |
+| crawlId       | string  | Unique identifier for the crawl                    |
+| projectId     | string  | Project identifier                                 |
+| url           | string  | The crawled URL                                    |
+| title         | string  | Page title extracted from the HTML                 |
+| markdown      | string  | Extracted content in markdown format               |
+| processedByAI | boolean | Whether the crawl result was processed by the AI   |
+| depthOfUrl    | number  | How deep this URL was in the crawl (0 = start URL) |
+| isSuccess     | boolean | Whether the crawl was successful                   |
+| error         | string  | Error message if the crawl failed                  |
+| createdAt     | string  | ISO timestamp when the result was created          |
 
 ## Error Handling
 

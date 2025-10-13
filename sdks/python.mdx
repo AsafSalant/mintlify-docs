@@ -49,6 +49,7 @@ crawl = client.run_crawl({
     "includeLinks": True,
     "timeout": 60,
     "useSitemap": False,
+	"extraction": "",
     "entireWebsite": False,
     "excludeNonMainTags": True,
     "useStaticIps": False
@@ -129,6 +130,7 @@ async def main():
             "includeLinks": True,
             "timeout": 60,
             "useSitemap": False,
+			"extraction": "",
             "entireWebsite": False,
             "excludeNonMainTags": True,
             "useStaticIps": False
@@ -205,6 +207,7 @@ The run crawl payload:
 | includeLinks       | boolean | ❌                                                                                      | true    | Whether to include links in the crawl results' markdown                                 |
 | excludeNonMainTags | boolean | ❌                                                                                      | true    | Whether to exclude non-main tags from the crawl results' markdown                       |
 | deduplicateContent | boolean | ❌                                                                                      | true    | Whether to remove duplicate text fragments that appeared on other pages                 |
+| extraction         | string  | ❌                                                                                      | ""      | Instructions defining how the AI should extract specific content from the crawl results |
 | timeout            | number  | ❌                                                                                      | 60      | Timeout duration in minutes                                                             |
 | engineType         | string  | ❌                                                                                      | "auto"  | The engine to use: "auto", "cheerio" (fast, static sites), "playwright" (dynamic sites) |
 | useStaticIps       | boolean | ❌                                                                                      | false   | Whether to use static IPs for the crawl                                                 |
@@ -275,6 +278,7 @@ class CrawlResult:
 	projectId: str        # Project identifier
     url: str              # The crawled URL
     title: str            # Page title
+	processedByAI: bool   # Whether the crawl result was processed by the AI.
     markdown: str         # Extracted content in markdown format
     depthOfUrl: int       # How deep this URL was in the crawl
     createdAt: str        # When the result was created
@@ -298,6 +302,7 @@ class Crawl:
     createdAt: str             # Creation timestamp
     completedAt: Optional[str] # Completion timestamp
     durationInSeconds: int     # Total duration
+	extraction: str			   # Instructions defining how the AI should extract specific content from the crawl results
     numberOfResults: int       # Number of results found
     useSitemap: bool           # Whether sitemap was used
     entireWebsite: bool        # Whether to use both sitemap and all found links

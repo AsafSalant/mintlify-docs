@@ -374,6 +374,12 @@
                 "minimum": 1,
                 "maximum": 110
               },
+              "extraction": {
+                "description": "Instructions defining how the AI should extract specific content from the crawl results",
+                "type": "string",
+                "default": "",
+                "example": "Extract only pricing info"
+              },
               "origin": {
                 "description": "Origin of the crawl request",
                 "type": "string",
@@ -455,6 +461,12 @@
             "default": true,
             "example": true
           },
+          "extraction": {
+            "type": "string",
+            "description": "Instructions defining how the AI should extract specific content from the crawl results",
+            "default": "",
+            "example": "Extract only pricing info about the product"
+          },
           "engineType": {
             "type": "string",
             "description": "The engine to use for the crawl. Auto: auto detect the best engine (default). Cheerio: fast, great for static websites. Playwright: great for dynamic websites that use JavaScript frameworks. ",
@@ -511,6 +523,11 @@
           },
           "markdown": {
             "type": "string",
+            "description": "Markdown content extracted from the crawled page",
+            "example": "## Latest Smartphone Model\n\nFeatures include 6.5\" display, 256GB storage, and 48MP camera. Available in Black and Silver."
+          },
+          "isAiAltered": {
+            "type": "boolean",
             "description": "Markdown content extracted from the crawled page",
             "example": "## Latest Smartphone Model\n\nFeatures include 6.5\" display, 256GB storage, and 48MP camera. Available in Black and Silver."
           },
