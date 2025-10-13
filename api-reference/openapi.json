@@ -529,7 +529,7 @@
           "processedByAI": {
             "type": "boolean",
             "description": "Markdown content extracted from the crawled page",
-            "example": "## Latest Smartphone Model\n\nFeatures include 6.5\" display, 256GB storage, and 48MP camera. Available in Black and Silver."
+            "example": false
           },
           "depthOfUrl": {
             "type": "integer",
