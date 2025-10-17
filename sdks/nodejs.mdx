@@ -124,7 +124,7 @@ const abortedCrawl = await client.abortCrawl(crawl.id);
 | createdAt          | string         | Creation timestamp                                                                      |
 | completedAt        | string \| null | Completion timestamp                                                                    |
 | durationInSeconds  | number         | Total duration                                                                          |
-| numberOfResults    | number         | Number of results found                                                                 |
+| totalPages         | number         | Count of pages extracted                                                                |
 | useSitemap         | boolean        | Whether sitemap was used                                                                |
 | extraction         | string         | Instructions defining how the AI should extract specific content from the crawl results |
 | entireWebsite      | boolean        | Whether to crawl the entire website                                                     |

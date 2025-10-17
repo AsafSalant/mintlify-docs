@@ -303,7 +303,7 @@ class Crawl:
     completedAt: Optional[str] # Completion timestamp
     durationInSeconds: int     # Total duration
 	extraction: str			   # Instructions defining how the AI should extract specific content from the crawl results
-    numberOfResults: int       # Number of results found
+    totalPages: int            # Count of pages extracted
     useSitemap: bool           # Whether sitemap was used
     entireWebsite: bool        # Whether to use both sitemap and all found links
     excludeNonMainTags: bool   # Whether non-main tags are excluded from the crawl results' markdown
