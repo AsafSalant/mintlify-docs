@@ -62,6 +62,12 @@
             "pages": [
               "api-reference/endpoint/crawl-results/get-crawl-results"
             ]
+          },
+          {
+            "group": "Crawl Logs",
+            "pages": [
+              "api-reference/endpoint/crawl-logs/get-crawl-logs"
+            ]
           }
         ]
       }

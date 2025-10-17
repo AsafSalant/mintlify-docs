@@ -252,6 +252,61 @@
           }
         }
       }
+    },
+    "/crawl-logs/{crawlId}": {
+      "get": {
+        "description": "Returns all logs for a specific crawl",
+        "parameters": [
+          {
+            "name": "crawlId",
+            "in": "path",
+            "description": "ID of crawl to get logs for",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number for pagination",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of logs per page",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1200,
+              "default": 1200
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated results with crawl logs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CrawlLogPagination"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - invalid or missing API key"
+          },
+          "404": {
+            "description": "Crawl not found"
+          }
+        }
+      }
     }
   },
   "webhooks": {
@@ -563,6 +618,98 @@
             "type": "integer",
             "minimum": 0,
             "default": 20,
+            "required": true
+          },
+          "totalPages": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0,
+            "required": true
+          },
+          "totalResults": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0,
+            "required": true
+          }
+        }
+      },
+      "CrawlLog": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the log entry",
+            "example": "6870e3c687c81925622df89f"
+          },
+          "message": {
+            "type": "string",
+            "description": "Log message",
+            "example": "Page crawled successfully"
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "info",
+              "debug",
+              "warn",
+              "error"
+            ],
+            "description": "Log level",
+            "example": "info"
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed description of the log entry",
+            "example": "Successfully crawled https://example.com/page"
+          },
+          "crawlId": {
+            "type": "string",
+            "description": "ID of the crawl this log belongs to",
+            "example": "6870e36787c81925622df818"
+          },
+          "teamId": {
+            "type": "string",
+            "nullable": true,
+            "description": "ID of the team associated with this log",
+            "example": "680e8bc08cdb14f10180db6a"
+          },
+          "data": {
+            "type": "object",
+            "nullable": true,
+            "description": "Additional data associated with the log entry",
+            "example": {
+              "url": "https://example.com/page",
+              "statusCode": 200
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when the log was created",
+            "example": "2025-07-11T10:13:26.966Z"
+          }
+        }
+      },
+      "CrawlLogPagination": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CrawlLog"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 1,
+            "required": true
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 1200,
             "required": true
           },
           "totalPages": {

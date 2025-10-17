@@ -90,6 +90,21 @@ The results are paginated, and you can specify the page number and limit per pag
 const abortedCrawl = await client.abortCrawl(crawl.id);
 ```
 
+### Get crawl logs
+
+Retrieve logs for a specific crawl to monitor its progress and debug issues:
+
+```typescript
+const page = 1;
+const limit = 1200;
+const logs = await client.getCrawlLogs(crawl.id, page, limit);
+
+// Iterate through logs
+for (const log of logs.results) {
+  console.log(`[${log.level}] ${log.message}: ${log.description}`);
+}
+```
+
 ## Objects
 
 ### RunCrawlPayload
@@ -149,6 +164,21 @@ Each crawl result includes:
 | isSuccess     | boolean | Whether the crawl was successful                   |
 | error         | string  | Error message if the crawl failed                  |
 | createdAt     | string  | ISO timestamp when the result was created          |
+
+### CrawlLog
+
+Each crawl log includes:
+
+| Property    | Type                                 | Description                                |
+| ----------- | ------------------------------------ | ------------------------------------------ |
+| id          | string                               | Unique identifier for the log entry        |
+| message     | string                               | Log message                                |
+| level       | 'info' \| 'debug' \| 'warn' \| 'error' | Log level                                  |
+| description | string                               | Detailed description of the log entry      |
+| crawlId     | string                               | Unique identifier for the crawl            |
+| teamId      | string \| null                       | Team identifier                            |
+| data        | object \| null                       | Additional data associated with the log    |
+| createdAt   | Date                                 | Timestamp when the log was created         |
 
 ## Error Handling
 

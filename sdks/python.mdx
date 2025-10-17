@@ -89,6 +89,18 @@ aborted_crawl = client.abort_crawl(crawl.id)
 print(f"Crawl aborted with ID: {aborted_crawl.id}")
 ```
 
+### Get crawl logs
+
+Retrieve logs for a specific crawl to monitor its progress and debug issues:
+
+```python
+page = 1
+limit = 1200
+logs = client.get_crawl_logs(crawl.id, page, limit)
+for log in logs.results:
+    print(f"[{log.level}] {log.message}: {log.description}")
+```
+
 ## Asynchronous Usage
 
 For better performance with I/O operations, use the async client:
@@ -185,6 +197,30 @@ async def main():
         # Abort the crawl
         aborted_crawl = await client.abort_crawl(crawl.id)
         print(f"Crawl aborted with ID: {aborted_crawl.id}")
+
+asyncio.run(main())
+```
+
+### Get crawl logs
+
+```python
+import asyncio
+from olyptik import AsyncOlyptik
+
+async def main():
+    async with AsyncOlyptik(api_key="your_api_key_here") as client:
+        # First start a crawl
+        crawl = await client.run_crawl({
+            "startUrl": "https://example.com",
+            "maxResults": 50
+        })
+        
+        # Get crawl logs
+        page = 1
+        limit = 1200
+        logs = await client.get_crawl_logs(crawl.id, page, limit)
+        for log in logs.results:
+            print(f"[{log.level}] {log.message}: {log.description}")
 
 asyncio.run(main())
 ```
@@ -308,6 +344,23 @@ class Crawl:
     entireWebsite: bool        # Whether to use both sitemap and all found links
     excludeNonMainTags: bool   # Whether non-main tags are excluded from the crawl results' markdown
     timeout: int               # Timeout (minues)
+```
+
+### CrawlLog
+
+Each crawl log entry contains:
+
+```python
+@dataclass
+class CrawlLog:
+    id: str                        # Unique log identifier
+    message: str                   # Log message
+    level: CrawlLogLevel           # Log level (info, debug, warn, error)
+    description: str               # Detailed description
+    crawlId: str                   # Crawl identifier
+    teamId: Optional[str]          # Team identifier
+    data: Optional[Dict[str, Any]] # Additional log data
+    createdAt: Optional[str]       # Creation timestamp
 ```
 
 ## Support
